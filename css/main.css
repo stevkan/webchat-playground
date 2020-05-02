@@ -47,6 +47,20 @@ h2 {
   width: 100%;
 }
 
+#noWebchat {
+  display: none;
+  justify-content: center;
+  height: 100%;
+  width: 80%;
+}
+
+#noWebchat>* {
+  /* background-color: #19194d; */
+  /* background-color: black; */
+  /* height: 95%; */
+  width: 100%;
+}
+
 div[role=complementary] {
   border-radius: 18px;
   display: flex;
@@ -73,15 +87,15 @@ div[role=complementary] {
     border-color: #73ADC6 !important
   } */
 
-#card_1>* {
-  background-color: #e6eaed;
+.serviceCard>* {
+  background-color: #aed1ec;
 }
 
-#card_1 button p {
+.serviceCard div {
   color: green
 }
 
-#card_1 button:hover p {
+.serviceCardHover:hover div {
   color: red
 }
 
@@ -125,6 +139,21 @@ iframe {
   height: 730px;
 }
 
+.activityStatus__outer__wrapper {
+  display: flex;
+  align-items: flex-start;
+  flex-direction: row;
+}
+
+.activityStatus__wrapper {
+  display: flex;
+  flex-direction: column;
+}
+
+.activityStatus__timestamp__wrapper {
+  display: flex;
+}
+
 .activityStatus,
 .activityStatus__timestamp,
 .activityStatus__timestamp span {
@@ -134,12 +163,19 @@ iframe {
   padding-top: 5px !important;
 }
 
+.activityStatus__activityId {
+  color: rgb(118, 118, 118) !important;
+  font-family: '"Calibri", "Helvetica Neue", "Arial", "sans-serif"' !important;
+  font-size: 0.6rem !important;
+  padding-top: 5px !important;
+}
+
 div[role=log] {
   border-radius: 18px;
 }
 
 div[role=log]>*:not(button) {
-  width: 102%;
+  width: 101.1%;
 }
 
 div[role=log]:not(button.webchat__scrollToEndButton)>* {
@@ -278,13 +314,8 @@ div[role=log] button.webchat__scrollToEndButton {
   padding-bottom: 11px;
 }
 
-.activityStatus__wrapper {
-  display: flex;
-  width: auto;
-}
-
 .botActivityDecorator {
-  /* min-height: 60px; */
+  display: flex;
   position: relative;
   width: 90px;
   padding-top: 5px;
@@ -344,4 +375,65 @@ div[role=log] button.webchat__scrollToEndButton {
   color: white;
   background-color: orange;
   height: 100%;
+}
+
+.divDisconnected {
+  height: 100%;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@keyframes flashDisconnected {
+  0% {
+    background-color: aqua;
+    color: white;
+  }
+
+  50% {
+    background-color: transparent;
+    color: transparent;
+  }
+}
+
+.disconnected {
+  color: white;
+  background-color: aqua;
+  animation-name: flashDisconnected;
+  animation-duration: 2s;
+  animation-iteration-count: infinite;
+  border-radius: 5px;
+  padding: 5px 10px;
+}
+
+.buttonClicked {
+  background-color: #008AF9 !important;
+  color: white !important;
+  border: transparent !important;
+  padding: 0px !important;
+  display: flex !important;
+  flex: 0 1 auto !important;
+}
+
+.buttonClickedDiv {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  padding: 1px;
+  background-color: white;
+  border-radius: 16px;
+  border: solid;
+  border-color: #008AF9;
+  flex: 1 1 auto;
+}
+
+.buttonClickedText {
+  color: white;
+  background-color: #008AF9;
+  border: solid;
+  border-radius: 12px;
+  border-width: 2px;
+  padding: 5px;
 }

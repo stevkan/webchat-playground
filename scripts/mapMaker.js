@@ -28,7 +28,7 @@ const mapMaker = (function () {
         },
         authOptions: {
           authType: 'subscriptionKey',
-          subscriptionKey: '<subscription key>'
+          subscriptionKey: 'f38ds624Rp-J3J4r_kg9zO4-PV6RkkGhiEt3MgM2R9o'
         }
       } );
 

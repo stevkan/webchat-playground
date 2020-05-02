@@ -4,36 +4,30 @@ const helpers = (function() {
   let publicAPIs = {};
   let xvalue;
 
-  publicAPIs.geoLoc = async function(name, value, actionStore) {
+  publicAPIs.geoLoc = async function(name, value, store) {
     await navigator.geolocation.getCurrentPosition( async (position) => {
-      // console.log(position);
-      // if (name === 'send_user_geolocation') {
-      //   if (position) {
-      //     actionStore = await window.simpleUpdateIn(
-      //       actionStore,
-      //       ['payload', 'activity', 'channelData', 'location' ],
-      //       () => position
-      //       );
-      //     console.log( name, value, actionStore)
-      //   }
-      // }
+      if (name === 'get_geolocation') {
+        if (position) {
+          sessionStorage.setItem('latitude', position.coords.latitude);
+          sessionStorage.setItem('longitude', position.coords.longitude);
+        }
+      }
       
-      if (name === 'display_user_geolocation') {
+      if (name === 'send_user_geolocation') {
         store.dispatch( {
           type: 'WEB_CHAT/SEND_EVENT',
           payload: {
             name: `${ name }`,
             value: {
               name: `${ value }`,
-              location: { latitude: latitude, longitude: longitude }
+              location: { latitude: position.coords.latitude, longitude: position.coords.longitude }
             }
           }
         } );
       }
-      return actionStore;
-    }, () =>
+    }, (error) =>
     {
-      console.log('fail')
+      console.log('WEB_CHAT >> GEOLOCATION_GET_POSITION_FAILURE: ', error);
     } );
   }  
 

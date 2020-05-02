@@ -49,7 +49,6 @@ const actionButtons = (function () {
     child[ 0 ].replaceWith( img ) 
 
     const disconnectBtn = document.getElementById( 'disconnectBtn' );
-
     disconnectBtn.addEventListener( 'click', () => {
       store.dispatch( {
         type: 'WEB_CHAT/SEND_MESSAGE_BACK',
@@ -68,7 +67,6 @@ const actionButtons = (function () {
     } )
 
     const reconnectBtn = document.getElementById( 'reconnectBtn' );
-    
     reconnectBtn.addEventListener( 'click', async () => {
       console.log( 'WEB_CHAT >> RESTARTING_WEB_CHAT' );
       await startWebChat();
@@ -80,7 +78,6 @@ const actionButtons = (function () {
     } )
 
     const resetBtn = document.getElementById( 'resetBtn' );
-
     resetBtn.addEventListener( 'click', () => {
       console.log( 'WEB_CHAT >> RESETTING_DIALOG' );
       store.dispatch( {
@@ -91,9 +88,8 @@ const actionButtons = (function () {
       } )
     } )
 
-    const reloadCssButton = document.getElementById( 'reloadCssBtn' );
-    
-    reloadCssButton.onclick = () => {
+    const reloadCssBtn = document.getElementById( 'reloadCssBtn' );
+    reloadCssBtn.onclick = () => {
       (function() {
         var h, a, f;
         a = document.getElementsByTagName( 'link' );
@@ -132,6 +128,18 @@ const actionButtons = (function () {
       })();
       location.reload( true );
     };
+
+    // const buttonClick = (function() {
+    //   window.addEventListener('click', (e) => {
+    //     let card = e.target.closest('.ac-adaptiveCard');
+    //     card.querySelectorAll( 'button' ).forEach( button => {
+    //       button.setAttribute( 'disabled', 'disabled' )
+    //       if (e.target === button) {
+    //         button.setAttribute( 'style', 'background-color: orange !important;' );
+    //       }
+    //     } );
+    //   });
+    // })()
   }
   return buttons;
 })()

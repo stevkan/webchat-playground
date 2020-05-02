@@ -77,6 +77,7 @@
     </div>
     <div id="container">
       <div id="webchat" role="main"></div>
+      <div id="noWebchat" role="main" ></div>
     </div>
     <div id="mapContainer">
       <div id="myMap"></div>
@@ -247,10 +248,10 @@
             <div className="botActivityDecorator">
               <ul className="botActivityDecorator__buttonBar">
                 <li>
-                  <button className="botActivityDecorator__button" onClick={handleUpvoteButton}>
+                  <button id="thumbsUp" className="botActivityDecorator__button" onClick={handleUpvoteButton}>
                     👍
                   </button>
-                  <button className="botActivityDecorator__button" onClick={handleDownvoteButton}>
+                  <button id="thumbsDown" className="botActivityDecorator__button" onClick={handleDownvoteButton}>
                     👎
                   </button>
                 </li>
@@ -261,7 +262,7 @@
         };
 
         const activityMiddleware = () => next => card => {
-          const { activity: { attachments, id, type, from: { role } } } = card;
+          const { activity, activity: { attachments, id, type, from: { role } } } = card;
           return (
             children =>
               <div>
@@ -275,57 +276,130 @@
         const activityStatusMiddleware = () => next => args => {
           const { activity, activity: { from: { role }, value }, sendState, sameTimestampGroup } = args;
 
-          const reactionButtons = document.body.getElementsByClassName( 'botActivityDecorator__button' );
-
-          if (role === 'bot') {
-            window.handleEvent = function(event) {
-              const { srcElement: { classList, textContent }, type } = event;
-              if (type === 'click') {
-                switch (textContent) {
-                case '👍':
-                  if (!event.srcElement.classList.contains( 'reaction_positive' )) {
-                    event.srcElement.classList.add( 'reaction_positive' )
-                  } else if (event.srcElement.classList.contains( 'reaction_positive' )) {
-                    event.srcElement.classList.remove( 'reaction_positive' )
-                  }
-                  break;
-                case '👎':
-                    if ( !event.srcElement.classList.contains( 'reaction_negative' ) ) {
-                      event.srcElement.classList.add( 'reaction_negative' )
-                    } else if ( event.srcElement.classList.contains( 'reaction_negative' ) ) {
-                      event.srcElement.classList.remove( 'reaction_negative' )
-                    }
-                    break;
-                default:
-                  event.srcElement.classList.remove( 'reaction_positive' )
-                  event.srcElement.classList.remove( 'reaction_negative' )
-                }
-              }
-            }
-            for ( let i = 0; i <= reactionButtons.length - 1; i++ ) {
-              reactionButtons[ i ].addEventListener( 'click', window, false)
+          if (activity && activity.id) {
+            const index = activity.id.indexOf( '|' );
+            const activityId = activity.id.substr( index + 1 );
+  
+            if ( sendState === 'send failed') {
+              return getMiddleware.disconnectMsg( 'DIRECT_LINE/DISCONNECT' );
             }
   
-            if ( sendState === 'sending' && value === 'isLoggedOff' || sendState === 'send failed' && value === 'isLoggedOff' ) {
-              return <div className="activityStatus__wrapper"><BotActivityDecorator key={args.activity.id} activityID={args.activity.id}></BotActivityDecorator><span className="activityStatus">Sent</span></div>;
-            } else if ( sendState === 'sending') {
-              return <div className="activityStatus__wrapper"><BotActivityDecorator key={args.activity.id} activityID={args.activity.id}></BotActivityDecorator><span className="activityStatus activityStatus__sendStatus">Sending&hellip;</span></div>;
-            } else if ( sendState === 'send failed' ) {
-              // Custom retry logic can be added when rendering the "Send failed." status.
-              return <div className="activityStatus__wrapper"><BotActivityDecorator key={args.activity.id} activityID={args.activity.id}></BotActivityDecorator><span className="activityStatus">Send failed</span></div>;
-            } else if ( !sameTimestampGroup ) {
-              return (
-                <div className="activityStatus__wrapper">
-                  <BotActivityDecorator key={args.activity.id} activityID={args.activity.id}></BotActivityDecorator>
-                  <span className="activityStatus activityStatus__timestamp">
-                    <span className="activityStatus__timestampPretext">{role === 'user' ? 'User sent: ' : 'Bot sent: '}</span>
-                    <span className="activityStatus__timestampContent">{next( args )}</span>
-                  </span>
-                </div>
-              );
+            if (role === 'bot') {
+              const reactionBtns = document.querySelectorAll( '.botActivityDecorator__button' );
+              
+              if (reactionBtns.length > 0) {
+                for (let i = 0; i <= reactionBtns.length - 1; i++) {
+                  reactionBtns[ i ].onclick = () => {
+                    if (reactionBtns[ i ].classList.contains( 'reaction_positive' ) && reactionBtns[ i ].innerText === '👍') {
+                      reactionBtns[ i ].classList.remove( 'reaction_positive' );
+                    } else if (!reactionBtns[ i ].classList.contains( 'reaction_positive' ) && reactionBtns[ i ].innerText === '👍') {
+                      reactionBtns[ i ].classList.add( 'reaction_positive' );
+                      reactionBtns[ i + 1 ].classList.remove( 'reaction_negative' );
+                    }
+                    
+                    if (reactionBtns[ i ].classList.contains( 'reaction_negative' ) && reactionBtns[ i ].innerText === '👎') {
+                      reactionBtns[ i ].classList.remove( 'reaction_negative' );
+                    } else if (!reactionBtns[ i ].classList.contains( 'reaction_negative' ) && reactionBtns[ i ].innerText === '👎') {
+                      reactionBtns[ i ].classList.add( 'reaction_negative' );
+                      reactionBtns[ i - 1 ].classList.remove( 'reaction_positive' );
+                    }
+                  }
+                }
+              }
+    
+              if ( sendState === 'sending' && value === 'isLoggedOff' || sendState === 'send failed' && value === 'isLoggedOff' ) {
+                return (
+                  <div className="activityStatus__outer__wrapper">
+                    <div className="activityStatus__wrapper">
+                      <span className="activityStatus">Sent</span>
+                    </div>
+                    <div className="activityStatus__activityId">(Message #{activityId})</div>
+                  </div>
+                );
+              } else if ( sendState === 'sending') {
+                return (
+                  <div className="activityStatus__outer__wrapper">
+                    <div className="activityStatus__wrapper">
+                      <span className="activityStatus activityStatus__sendStatus">Sending&hellip;</span>
+                    </div>
+                    <div className="activityStatus__activityId">(Message #{activityId})</div>
+                  </div>
+                );
+              } else if ( sendState === 'send failed' ) {
+                // Custom retry logic can be added when rendering the "Send failed." status.
+                return (
+                  <div className="activityStatus__outer__wrapper">
+                    <div className="activityStatus__wrapper">
+                      <span className="activityStatus">Send failed</span>
+                    </div>
+                    <div className="activityStatus__activityId">(Message #{activityId})</div>
+                  </div>
+                );
+              } else if ( !sameTimestampGroup ) {
+                return (
+                  <div className="activityStatus__outer__wrapper">
+                    <BotActivityDecorator key={args.activity.id} activityID={args.activity.id}></BotActivityDecorator>
+                    <div className="activityStatus__wrapper">
+                      <div className="activityStatus__timestamp__wrapper">
+                        <span className="activityStatus activityStatus__timestamp">
+                          <span className="activityStatus__timestampPretext">{role === 'user' ? 'User sent: ' : 'Bot sent: '}</span>
+                          <span className="activityStatus__timestampContent">{next( args )}</span>
+                        </span>
+                      </div>
+                      <div className="activityStatus__activityId">(Message #{activityId})</div>
+                    </div>
+                  </div>
+                );
+              }
             }
+  
+            if (role === 'user') {
+              if ( sendState === 'sending' && value === 'isLoggedOff' ) {
+                return (
+                  <div>
+                    <div className="activityStatus__wrapper">
+                      <span className="activityStatus">Sent</span>
+                    </div>
+                    <div className="activityStatus__activityId">(Message #{activityId})</div>
+                  </div>
+                );
+              } else if ( sendState === 'sending') {
+                return (
+                  <div>
+                    <div className="activityStatus__wrapper">
+                      <span className="activityStatus activityStatus__sendStatus">Sending&hellip;</span>
+                    </div>
+                    <div className="activityStatus__activityId">(Message #{activityId})</div>
+                  </div>
+                );
+              } else if ( sendState === 'send failed' ) {
+                // Custom retry logic can be added when rendering the "Send failed." status.
+                return (
+                  <div>
+                    <div className="activityStatus__wrapper">
+                      <span className="activityStatus">Send failed</span>
+                    </div>
+                    <div className="activityStatus__activityId">(Message #{activityId})</div>
+                  </div>
+                );
+              } else if ( !sameTimestampGroup ) {
+                return (
+                  <div>
+                    <div className="activityStatus__wrapper">
+                      <span className="activityStatus activityStatus__timestamp">
+                        <span className="activityStatus__timestampPretext">{role === 'user' ? 'User sent: ' : 'Bot sent: '}</span>
+                        <span className="activityStatus__timestampContent">{next( args )}</span>
+                      </span>
+                    </div>
+                    <div className="activityStatus__activityId">(Message #{activityId})</div>
+                  </div>
+                );
+              }
+            }
+  
+            return next( args );
+
           }
-          return next( args );
         };
 
         // We are adding a new middleware to handle card action
@@ -357,7 +431,9 @@
         } );
 
         const startWebChat = async () => {
-          userName = await helpers.generateUserName();
+          if (!userName) {
+            userName = await helpers.generateUserName();
+          }
           if ( directLine ) {
             directLine = await startDirectLine(directLine, 'reconnect');
           } else {

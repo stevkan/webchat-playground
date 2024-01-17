@@ -1,3 +1,5 @@
+// @ts-check
+
 const helpers = (function() {
 'use strict';
 
@@ -8,8 +10,8 @@ const helpers = (function() {
     await navigator.geolocation.getCurrentPosition( async (position) => {
       if (name === 'get_geolocation') {
         if (position) {
-          sessionStorage.setItem('latitude', position.coords.latitude);
-          sessionStorage.setItem('longitude', position.coords.longitude);
+          localStorage.setItem('latitude', String(position.coords.latitude));
+          localStorage.setItem('longitude', String(position.coords.longitude));
         }
       }
       
@@ -32,7 +34,7 @@ const helpers = (function() {
   }  
 
   publicAPIs.generateUserName = async function(userName) {
-    const usernames = [ 'Seafood Treasure', 'Rahvin', 'Seamus', 'Shamus', 'Gurthang', 'Lord Voldemort', 'Captain LoudMouth', 'Picklehead', 'Popeye', 'He Who Shall Be Named Only On Tuesdays' ];
+    const usernames = [ 'Seafood Treasure', 'Rahvin', 'Seamus', 'Shamus', 'Ted Gruesome', 'Gurthang', 'Lord Voldemort', 'Captain LoudMouth', 'Picklehead', 'Popeye', 'He Who Shall Be Named Only On Tuesdays' ];
     userName = await usernames[ Math.floor( Math.random() * usernames.length ) ];
     return userName;
   }

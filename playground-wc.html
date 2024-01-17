@@ -1,61 +1,79 @@
 <!DOCTYPE html>
 <html lang="en-US">
-  <head>
-    <!-- Cognitive Services Speech Services adapter is only available in full bundle -->
-    <meta name="viewport" charset="utf-8" content="width=device-width,
+
+<head>
+  <!-- Cognitive Services Speech Services adapter is only available in full bundle -->
+  <meta name="viewport" charset="utf-8" content="width=device-width,
       initial-scale=1.0,
       shrink-to-fit=no">
-    <meta http-equiv='cache-control' content='no-cache, no-store, must-revalidate'>
-    <meta http-equiv='expires' content='0'>
-    <meta http-equiv='pragma' content='no-cache'>
-    <script src="https://unpkg.com/markdown-it@8.4.2/dist/markdown-it.min.js"></script>
-    <script crossorigin="anonymous"
-      src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
-    <script crossorigin="anonymous"
-      src="https://unpkg.com/react@16.8.6/umd/react.development.js"></script>
-    <script crossorigin="anonymous"
-      src="https://unpkg.com/react-dom@16.8.6/umd/react-dom.development.js"></script>
-    <script crossorigin="anonymous"
-      src="https://unpkg.com/react-redux@5.0.7/dist/react-redux.min.js"></script>
-    <script src="https://unpkg.com/glamor@2.20.40/umd/index.js"></script>
-    <script src="https://code.jquery.com/jquery-3.4.1.min.js"
-      integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="crossorigin="anonymous"></script>
-    <script crossorigin="anonymous"
-      src="https://unpkg.com/simple-update-in/dist/simple-update-in.production.min.js"></script>
-    <link rel="stylesheet"
-      href="https://atlas.microsoft.com/sdk/javascript/mapcontrol/2/atlas.min.css"
-      type="text/css">
-    <script
-      src="https://atlas.microsoft.com/sdk/javascript/mapcontrol/2/atlas.min.js"></script>
-    <link rel="stylesheet" href="css/main.css" type="text/css">
-    <script crossorigin="anonymous"
-      integrity="sha384-7aeOL7r9BM1QyTIsoLYJYNsRLfVnQCtLmwgXlxteDNhJf0xUGj9PKP8F5w2Fx92/"
-      src="https://unpkg.com/botframework-directlinejs@0.11.6/dist/directline.js"></script>
-    <!-- <script
+  <meta http-equiv='cache-control' content='no-cache, no-store,
+      must-revalidate'>
+  <meta http-equiv='expires' content='0'>
+  <meta http-equiv='pragma' content='no-cache'>
+  <link rel="icon" href="images/favicon.ico" type="image/x-icon" />
+  <!-- <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/crypto-js@4.0.0/index.min.js"></script> -->
+  <script src="https://unpkg.com/markdown-it@8.4.2/dist/markdown-it.min.js"></script>
+  <script crossorigin="anonymous" src="https://unpkg.com/@babel/standalone@7.8.7/babel.min.js"></script>
+  <script crossorigin="anonymous" src="https://unpkg.com/regenerator-runtime@0.13.3/runtime.js"></script>
+  <script crossorigin="anonymous" src="https://unpkg.com/react@16.8.6/umd/react.development.js"></script>
+  <script crossorigin="anonymous" src="https://unpkg.com/react-dom@16.8.6/umd/react-dom.development.js"></script>
+  <script crossorigin="anonymous" src="https://unpkg.com/react-redux@7.1.0/dist/react-redux.min.js"></script>
+  <script src="https://unpkg.com/glamor@2.20.40/umd/index.js"></script>
+  <script src="https://code.jquery.com/jquery-3.4.1.min.js"
+    integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+  <script crossorigin="anonymous"
+    src="https://unpkg.com/simple-update-in/dist/simple-update-in.production.min.js"></script>
+  <script crossorigin="anonymous" src="https://unpkg.com/i18next/dist/umd/i18next.js"></script>
+  <script
+    src="https://botberg81bd.blob.core.windows.net/scripts/i18nextBrowserLanguageDetector.js?sv=2019-02-02&st=2020-09-03T00%3A31%3A17Z&se=2030-09-04T00%3A31%3A00Z&sr=b&sp=r&sig=zpMBJzE2YSMZfjCDIQG%2FJks4BRi9ZOsGc3vE2m%2FlZxw%3D"></script>
+  <link rel="stylesheet" href="https://atlas.microsoft.com/sdk/javascript/mapcontrol/2/atlas.min.css" type="text/css">
+  <script src="https://atlas.microsoft.com/sdk/javascript/mapcontrol/2/atlas.min.js"></script>
+  <link rel="stylesheet" href="css/main.css" type="text/css">
+  <script crossorigin="anonymous" src="https://unpkg.com/botframework-directlinejs@0.15.1/dist/directline.js"></script>
+  <!-- <script
       src="https://github.com/microsoft/BotFramework-DirectLineJS/releases/download/dev-streamingextensions/directline.js"></script> -->
-    <!-- <script src="http://localhost:5000/dist/directline.js"></script> -->
-    <script type="text/javascript" src="scripts/apiService.js"></script>
-    <script type="text/javascript" src="scripts/actionButtons.js"></script>
-    <script type="text/javascript" src="scripts/helpers.js"></script>
-    <script type="text/javascript" src="scripts/mapMaker.js"></script>
-    <script type="text/javascript" src="scripts/startDirectLine.js"></script>
-    <script type="text/javascript" src="scripts/storeMiddleware.js"></script>
-    <script type="text/javascript" src="scripts/styleOptions.js"></script>
-    <!-- <script type="application/javascript" src="src/sw.js"></script> -->
-    <script crossorigin="anonymous"
-      src="https://cdn.botframework.com/botframework-webchat/latest/webchat.js"></script>
-    <!-- <script crossorigin="anonymous" src="http://localhost:5000/webchat.js"></script> -->
-    <!-- <script crossorigin="anonymous"
-    src="https://github.com/microsoft/BotFramework-WebChat/releases/download/daily/webchat.js"></script> -->
-    <style>
-    </style>
-  </head>
-  <body>
-    <div id="header">
-      <div>
-        <h2>Reusable Web Chat</h2>
-      </div>
+  <script type="text/javascript" src="scripts/apiService.js"></script>
+  <script type="text/javascript" src="scripts/actionButtons.js"></script>
+  <script type="text/javascript" src="scripts/adaptiveCardsHostConfig.js"></script>
+  <script type="text/javascript" src="scripts/helpers.js"></script>
+  <script type="text/javascript" src="scripts/mapMaker.js"></script>
+  <script type="text/javascript" src="scripts/startServices.js"></script>
+  <script type="text/javascript" src="scripts/storeMiddleware.js"></script>
+  <script type="text/javascript" src="scripts/styleOptions.js"></script>
+  <script type="text/javascript" src="scripts/styleSet.js"></script>
+  <script type="text/javascript" src="scripts/activityMiddleWare.js"></script>
+  <script type="text/javascript" src="scripts/testMiddleWare.js"></script>
+  <script type="text/javascript" src="scripts/customHooks/useSetTimer.js"></script>
+  <script type='text/javascript' src='scripts/activityHandlers/onConnect.js'></script>
+  <script type='text/javascript' src='scripts/activityHandlers/onConnectFulfilled.js'></script>
+  <script type='text/javascript' src='scripts/activityHandlers/onDisconnectFulfilled.js'></script>
+  <script type='text/javascript' src='scripts/activityHandlers/onDisconnectPending.js'></script>
+  <script type='text/javascript' src='scripts/activityHandlers/onEndOfConversation.js'></script>
+  <script type='text/javascript' src='scripts/activityHandlers/onIncomingActivity.js'></script>
+  <script type='text/javascript' src='scripts/activityHandlers/onIncomingEvent.js'></script>
+  <script type='text/javascript' src='scripts/activityHandlers/onIncomingMessageReaction.js'></script>
+  <script type='text/javascript' src='scripts/activityHandlers/onPostActivity.js'></script>
+  <script type='text/javascript' src='scripts/activityHandlers/onReconnect.js'></script>
+  <script type='text/javascript' src='scripts/constants.js/middlewareConstants.js'></script>
+  <script type='text/javascript' src="../WebChat-HTML/getDirectLineToken.js"></script>
+  <!-- <script type="application/javascript" src="src/sw.js"></script> -->
+  <script crossorigin="anonymous" src="https://cdn.botframework.com/botframework-webchat/latest/webchat.js"></script>
+  <!-- <script crossorigin="anonymous" integrity="sha384-p2OPScrMSjkVB7EVL56uwJnwMV7/bWuYWXavfDMjze+9kUnEZb22ARunHekUVtSr"
+      src="https://github.com/microsoft/BotFramework-WebChat/releases/download/daily/webchat.js"></script> -->
+  <!-- <script src="http://localhost:5000/webchat.js"></script> -->
+  <!-- <script crossorigin="anonymous" src="../../botbuilder-repos/BotFramework-WebChat/packages/bundle/dist/webchat.js"></script> -->
+  <style>
+  </style>
+</head>
+
+<body>
+  <div id="header">
+    <div>
+      <h2>Reusable Web Chat</h2>
     </div>
+  </div>
+  <div id="chatHeader">
+    <div class="chatReceived"></div>
     <div id="subHeader">
       <div>
         <button id='reloadCssBtn' type="button">Reload CSS</button>
@@ -74,399 +92,889 @@
       <div>
         <button id='resetBtn' type="button">Reset Dialog</button>
       </div>
+      <div>
+        <button id='expireTokenBtn' type="button">Expire Token</button>
+      </div>
     </div>
-    <div id="container">
-      <div id="webchat" role="main"></div>
-      <div id="noWebchat" role="main" ></div>
-    </div>
-    <div id="mapContainer">
-      <div id="myMap"></div>
-    </div>
-    <!-- <script type="application/javascript">
+  </div>
+  <div id="container">
+    <div id="webchat" role="main"></div>
+    <div id="noWebchat" role="main"></div>
+  </div>
+  <div>
+    <p>Count numbers: <output id="result"></output></p>
+    <button id='startWorker'>Start Worker</button>
+    <button id='stopWorker'>Stop Worker</button>
+  </div>
+  <div id="mapContainer">
+    <div id="myMap"></div>
+  </div>
+  <!-- <script type="application/javascript">
       if ( 'serviceWorker' in navigator ) {
         // Register a service worker hosted at the root of the
         // site using the default scope.
-        navigator.serviceWorker.register( 'src/sw.js', { scope: 'src/'} ).then( function ( registration ) {
-          console.log( 'Service worker registration succeeded:', registration );
-        }, /*catch*/ function ( error ) {
-          console.log( 'Service worker registration failed:', error );
-        } );
+        const worker = navigator.serviceWorker;
+        worker.register( 'public/sw.js', { scope: 'public/' } )
+        // .then( function ( registration ) {
+        //   console.log( 'Service worker registration succeeded:', registration );
+        // }, /*catch*/ function ( error ) {
+        //   console.log( 'Service worker registration failed:', error );
+        // } );
       } else {
         console.log( 'Service workers are not supported.' );
       }
     </script> -->
-    <script type="text/babel" data-presets="es2015,react,stage-3">
-      (async function () {
-        'use strict';
+  <script type="text/babel" data-presets="es2015,react,stage-3">
+    ( async function () {
+      'use strict';
 
-        const { ReactDOM: { render }, WebChat: { connectToWebChat, createDirectLine, createStore, hooks: { useDismissNotification, usePostActivity, useRenderActivityStatus, useScrollToEnd, useSendPostBack, useSetNotification, useSetImmediate }, ReactWebChat } } = window;
-        const { useCallback, useMemo, useState } = window.React;
-        let authorizationToken,
-          directLine,
-          geolocation,
-          message = '',
-          region,
-          userName;
+      const { ReactDOM: { render }, WebChat: {
+        Components: {
+          AdaptiveCardContent,
+          AnimationCardContent,
+          AudioCardContent,
+          HeroCardContent,
+          OAuthCardContent,
+          ReceiptCardContent,
+          SignInCardContent,
+          ThumbnailCardContent,
+          VideoCardContent
+        },
+        connectToWebChat,
+        createDirectLine,
+        createStore,
+        createStyleSet,
+        hooks: {
+          useDismissNotification,
+          usePostActivity,
+          useRenderActivityStatus,
+          useScrollToEnd,
+          useSendPostBack,
+          useSetNotification,
+          useSetImmediate,
+          useStyleOptions
+        },
+        ReactWebChat
+      } } = window;
+      // const useTimer = window.useTimer
+      const { useCallback, useMemo, useState } = window.React;
+      const LanguageDetector = window.i18nextBrowserLanguageDetector;
+      const getToken = GetDirectLineToken.getToken;
+      // const useLastBotActivity = 
+      // const CryptoJS = window.CryptoJS;
+      let authorizationToken,
+        directLine,
+        adaptiveCardHostConfig,
+        geolocation,
+        language,
+        message = '',
+        // notificationWorker,
+        region,
+        userName,
+        webWorker;
 
-        helpers.webChatVersion();
+      // window.addEventListener( 'load', () => {
+      //   // Is service worker available?
+      //   if ( 'serviceWorker' in navigator ) {
+      //     navigator.serviceWorker.register( './sw.js' ).then( () => {
+      //       console.log( 'Service worker registered!' );
+      //     } ).catch( ( error ) => {
+      //       console.warn( 'Error registering service worker:' );
+      //       console.warn( error );
+      //     } );
+      //   }
+      // } );
 
-        const Button = () => {
-          const scrollToEnd = useScrollToEnd();
-          const handleClick = () => {
-            scrollToEnd();
+      const startWorker = document.getElementById( 'startWorker' );
+      startWorker.onclick = () => {
+        if ( typeof ( Worker ) !== "undefined" ) {
+          if ( typeof ( webWorker ) == "undefined" ) {
+            webWorker = new Worker( "./scripts/counterWorker.js" );
+          }
+          webWorker.onmessage = function ( event ) {
+            console.log( event );
+            document.getElementById( "result" ).innerHTML = event.data;
           };
-          
-          return (
-            <button className='scrollBtn' type="button" onClick={handleClick}>Scroll To End</button>
-          )
+        } else {
+          document.getElementById( "result" ).innerHTML = "Sorry! No Web Worker support.";
+        }
+      };
+
+      const stopWorker = document.getElementById( 'stopWorker' );
+      stopWorker.onclick = () => {
+        webWorker.terminate();
+        webWorker = undefined;
+      };
+
+      helpers.webChatVersion();
+
+      i18next
+        .use( LanguageDetector )
+        .init( {
+          fallbackLng: 'en',
+          detection: {
+            lookupLocalStorage: 'i18nextLng',
+            caches: [ 'localStorage' ]
+          }
+        },
+          ( err, t ) => {
+            if ( err ) return console.log( 'Error loading i18next' );
+          } );
+
+      const Button = () => {
+        const scrollToEnd = useScrollToEnd();
+        const handleClick = () => {
+          scrollToEnd();
         };
-        const ScrollToEnd = () => {
+
+        return (
+          <button className='scrollBtn' type="button" onClick={ handleClick }>Scroll To End</button>
+        );
+      };
+      
+      const ScrollToEnd = () => {
+        return (
+          <div>
+            <Button />
+          </div>
+        );
+      };
+
+      const buttonActivityMiddleware = () => next => ( ...setupArgs ) => {
+        const { activity } = setupArgs[ 0 ];
+
+        const render = next( ...setupArgs );
+
+        if ( render ) {
+          return ( ...renderArgs ) => {
+            const element = render( ...renderArgs );
+            const [ card ] = setupArgs;
+
+            return element && (
+              <div>
+                <Button />
+              </div>
+            );
+          };
+        }
+      };
+
+      // const getTestMiddleware = ( function () {
+      //   'use strict';
+      //   const testMiddleware = function () {
+
+
+      //     return `<div>Piggle</div>`;
+
+      //   }
+      //   return testMiddleware;
+      // } )();
+
+      const { css } = window.Glamor;
+
+      const HIGHLIGHT_FROM_BOT_CSS = css( {
+        borderLeftColor: 'Red',
+        borderLeftStyle: 'solid',
+        borderLeftWidth: 5,
+        marginLeft: 8
+      } );
+
+      const HIGHLIGHT_FROM_USER_CSS = css( {
+        borderRightColor: 'Green',
+        borderRightStyle: 'solid',
+        borderRightWidth: 5,
+        marginRight: 8
+      } );
+
+      const activeCountdown = 7000;
+      let notificationTimeout;
+
+      const store = await createStore( {
+        // activities: [
+        //   {
+        //     "type": "message",
+        //     // "id": "EOKBxBQborP7NTyYkUPHTN-us|0000001",
+        //     "timestamp": "2023-04-12T17:22:18.0819477Z",
+        //     "channelId": "directline",
+        //     "from": {
+        //       "id": "botberg",
+        //       "name": "Master Bot",
+        //       "role": "bot"
+        //     },
+        //     // "conversation": {
+        //     //   "id": "EOKBxBQborP7NTyYkUPHTN-us"
+        //     // },
+        //     "inputHint": "acceptingInput",
+        //     "channelData": {
+        //       "isWelcomeCard": true
+        //     },
+        //     "text": "test message"
+        //   },
+        //   {
+        //     "type": "message",
+        //     // "id": "EOKBxBQborP7NTyYkUPHTN-us|0000002",
+        //     "timestamp": "2023-04-12T17:22:18.0819477Z",
+        //     "channelId": "directline",
+        //     "from": {
+        //       "id": "botberg",
+        //       "name": "Master Bot",
+        //       "role": "bot"
+        //     },
+        //     // "conversation": {
+        //     //   "id": "EOKBxBQborP7NTyYkUPHTN-us"
+        //     // },
+        //     "inputHint": "acceptingInput",
+        //     "channelData": {
+        //       "isWelcomeCard": true
+        //     },
+        //     "text": "test message 2"
+        //   }
+        // ]
+      }, ( { dispatch } ) => next => async action => getStoreMiddleware.storeMiddleware( store, next, action, userName, mapMaker, helpers, window, startWebChat, directLine ) );
+  
+      const IsLoggedOnToast = () => {
+        const sendPostBack = useSendPostBack();
+        const dismissNotification = useDismissNotification();
+        const setNotification = useSetNotification();
+
+        const Countdown = () => {
+          let [ countdown, setCountdown ] = useState( 30 );
+
+          helpers.startTimer( countdown, setCountdown, handleDismissNotification );
+
+
+          ( () => {
+            webWorker = new Worker( "./scripts/demo_workers.js" );
+            webWorker.onmessage = function ( event ) {
+              document.getElementById( "result" ).innerHTML = event.data;
+            };
+          } )();
+
+
+          return (
+            <div className="countdown">
+              <div className="countdown-timer">{ countdown }</div>
+            </div>
+          );
+        };
+
+        const handleDismissNotification = useCallback( () => {
+          dismissNotification( 'isLoggedOn' );
+          endChat();
+        }, [
+          dismissNotification
+        ] );
+
+        const endChat = () => {
+          store.dispatch( {
+            type: 'WEB_CHAT/SEND_MESSAGE_BACK',
+            payload: {
+              value: 'isLoggedOff',
+              displayText: `${ userName } left the conversation`,
+              text: `${ userName } left the conversation`
+            }
+          } );
+        };
+
+        const handleAgreeClick = useCallback( () => {
+          sendPostBack( 'isLoggedOn' );
+
+          setNotification( {
+            data: { accepted: true },
+            id: 'isLoggedOn',
+            level: 'success',
+            message: 'You session has been extended.'
+          } );
+
+          setTimeout( () => {
+            dismissNotification( 'isLoggedOn' );
+          }, 1500 );
+        }, [
+          dismissNotification
+        ] );
+
+        return (
+          <div aria-label="Is logged on modal" className="modal__isLoggedOnToast">
+            <div aria-label="Is logged on" role="dialog" className="app__isLoggedOnToast">
+              <span>
+                You have been inactive for 5 mins. Stay connected?
+              </span>
+              <button className="app__isLoggedOnToast__button" onClick={ handleAgreeClick } type="button">
+                Yes
+              </button>{ ' ' }
+              <button className="app__isLoggedOnToast__button" onClick={ handleDismissNotification } type="button">
+                No
+              </button>
+              <Countdown />
+            </div>
+          </div>
+        );
+      };
+
+      const toastMiddleware = () => next => ( { notification, ...otherArgs } ) => {
+        if ( notification.id === 'isLoggedOn' && !notification.data.accepted ) {
           return (
             <div>
-              <Button />
+              <IsLoggedOnToast />;
             </div>
-          )
+          );
         }
 
-        const { css } = window.Glamor;
+        return next( { notification, ...otherArgs } );
+      };
 
-        const HIGHLIGHT_FROM_BOT_CSS = css( {
-          borderLeftColor: 'Red',
-          borderLeftStyle: 'solid',
-          borderLeftWidth: 5,
-          marginLeft: 8
-        } );
+      const PasswordInputActivity = ( { activity, nextVisibleActivity } ) => {
+        const [ twoFACode, setTwoFACode ] = useState( '' );
+        const [ encryptedCode, setEncryptedCode ] = useState( '' );
+        const [ submitted, setSubmitted ] = useState( false );
+        const renderActivityStatus = useRenderActivityStatus( { activity, nextVisibleActivity } );
+        const sendPostBack = useSendPostBack();
 
-        const HIGHLIGHT_FROM_USER_CSS = css( {
-          borderRightColor: 'Green',
-          borderRightStyle: 'solid',
-          borderRightWidth: 5,
-          marginRight: 8
-        } );
+        const handleCodeChange = useCallback(
+          ( { target: { value } } ) => {
 
-        const activeCountdown = 7000;
-        let notificationTimeout;
-        
-        const store = createStore( {}, ( { dispatch } ) => next => async action => getMiddleware.storeMiddleware(store, next, action, userName, mapMaker, helpers, window) );
+            setTwoFACode( value );
+          },
+          [ setTwoFACode ]
+        );
 
-        const IsLoggedOnToast = () => {
-          const sendPostBack = useSendPostBack();
-          const dismissNotification = useDismissNotification();
-          const setNotification = useSetNotification();
+        const handleSubmit = useCallback(
+          event => {
+            event.preventDefault();
 
-          const Countdown = () => {
-            let [ countdown, setCountdown ] = useState( 30 );
+            sendPostBack( { code: twoFACode } );
+            setSubmitted( true );
+          },
+          [ sendPostBack, setSubmitted, twoFACode ]
+        );
 
-            helpers.startTimer(countdown, setCountdown, handleDismissNotification);
+        return (
+          <div className="passwordInput">
+            <form className="passwordInput__form" onSubmit={ handleSubmit }>
+              <label className="passwordInput__box">
+                <span className="passwordInput__label">Please input your 2FA code</span>
+                <input
+                  autoFocus={ true }
+                  className="passwordInput__input"
+                  disabled={ submitted }
+                  onChange={ handleCodeChange }
+                  type="password"
+                  value={ twoFACode }
+                />
+              </label>
+            </form>
+            { renderActivityStatus() }
+          </div>
+        );
+      };
 
-            return (
-              <div className="countdown">
-                <div className="countdown-timer">{countdown}</div>
-              </div>
-            )
-          };
+      // const activityMiddleware = () => next => (...setupArgs) => (...renderArgs) => {
+      //   const render = next( ...setupArgs );
+      //   if (render) getActivityMiddleware.activityMiddleware(next, [...setupArgs, ...renderArgs])
+      // };
 
-          const handleDismissNotification = useCallback( () => {
-            dismissNotification( 'isLoggedOn' );
-            endChat();
-          }, [
-            dismissNotification
-          ] );
+      const activityMiddleware = () => next => ( ...setupArgs ) => {
+        const { activity } = setupArgs[ 0 ];
+        if ( activity.type === 'messageReaction' ) {
+          return false;
+        }
 
-          const endChat = () => {
-            store.dispatch( {
-              type: 'WEB_CHAT/SEND_MESSAGE_BACK',
-              payload: {
-                value: 'isLoggedOff',
-                displayText: `${ userName } left the conversation`,
-                text: `${ userName } left the conversation`
-              }
-            } );
-          }
+        const render = next( ...setupArgs );
 
-          const handleAgreeClick = useCallback( () => {
-            sendPostBack( 'isLoggedOn' );
+        if ( render ) {
+          return ( ...renderArgs ) => {
+            const element = render( ...renderArgs );
+            const [ card ] = setupArgs;
 
-            setNotification( {
-              data: { accepted: true },
-              id: 'isLoggedOn',
-              level: 'success',
-              message: 'You session has been extended.'
-            } );
-
-            setTimeout(() => {
-              dismissNotification( 'isLoggedOn' );
-            }, 1500);
-          }, [
-            dismissNotification
-          ] );
-
-          return (
-            <div aria-label="Is logged on modal" className="modal__isLoggedOnToast">
-              <div aria-label="Is logged on" role="dialog" className="app__isLoggedOnToast">
-                <span>
-                  You have been inactive for 5 mins. Stay connected?
-                </span>
-                <button className="app__isLoggedOnToast__button" onClick={handleAgreeClick} type="button">
-                  Yes
-                </button>{' '}
-                <button className="app__isLoggedOnToast__button" onClick={handleDismissNotification} type="button">
-                  No
-                </button>
-                <Countdown />
-              </div>
-            </div>
-          );
-        };
-
-        const toastMiddleware = () => next => ( { notification, ...otherArgs } ) => {
-          if ( notification.id === 'isLoggedOn' && !notification.data.accepted ) {
-            return <IsLoggedOnToast />;
-          }
-
-          return next( { notification, ...otherArgs } );
-        };
-
-        const BotActivityDecorator = ( { activityID, children } ) => {
-          const postActivity = usePostActivity();
-
-          const handleDownvoteButton = useCallback( () => {
-            postActivity( {
-              type: 'messageReaction',
-              reactionsAdded: [ { activityID, helpful: -1 } ]
-            } );
-          }, [ activityID, postActivity ] );
-
-          const handleUpvoteButton = useCallback( () => {
-            postActivity( {
-              type: 'messageReaction',
-              reactionsAdded: [ { activityID, helpful: 1 } ]
-            } );
-          }, [ activityID, postActivity ] );
-
-          return (
-            <div className="botActivityDecorator">
-              <ul className="botActivityDecorator__buttonBar">
-                <li>
-                  <button id="thumbsUp" className="botActivityDecorator__button" onClick={handleUpvoteButton}>
-                    👍
-                  </button>
-                  <button id="thumbsDown" className="botActivityDecorator__button" onClick={handleDownvoteButton}>
-                    👎
-                  </button>
-                </li>
-              </ul>
-              <div className="botActivityDecorator__content">{children}</div>
-            </div>
-          );
-        };
-
-        const activityMiddleware = () => next => card => {
-          const { activity, activity: { attachments, id, type, from: { role } } } = card;
-          return (
-            children =>
+            return element && (
               <div>
-                <div key={() => id} className={role === 'user' ? HIGHLIGHT_FROM_USER_CSS : HIGHLIGHT_FROM_BOT_CSS}>
-                    {next( card )( children )}
-                </div>
+                <div className={ card.activity.from.role === 'user' ? 'highlightedActivity--user' : 'highlightedActivity--bot' }>{ element }</div>
               </div>
-          );
+            );
+          };
         }
+      };
 
-        const activityStatusMiddleware = () => next => args => {
-          const { activity, activity: { from: { role }, value }, sendState, sameTimestampGroup } = args;
+      // const activityMiddleware = () => next => ( ...card ) => ( ...children ) => {
+      //   // if (card.activity.type !== 'message') return next(card)
+      //   const render = next( ...card )
+      //   if ( render ) {
+      //     console.log( 'TTTTT ', render )
+      //     const { activity } = card[ 0 ];
+      //     if ( activity ) {
+      //       return render && (
+      //         <div>
+      //           <div key={ () => activity.id } className={ activity.from.role === 'user' ? HIGHLIGHT_FROM_USER_CSS : HIGHLIGHT_FROM_BOT_CSS }>
+      //             { next( ...card )( ...children ) }
+      //           </div>
+      //         </div>
+      //       )
+      //     }
+      //   }
+      //   return next( card[ 0 ] )
+      // }
 
-          if (activity && activity.id) {
-            const index = activity.id.indexOf( '|' );
-            const activityId = activity.id.substr( index + 1 );
-  
-            if ( sendState === 'send failed') {
-              return getMiddleware.disconnectMsg( 'DIRECT_LINE/DISCONNECT' );
-            }
-  
-            if (role === 'bot') {
-              const reactionBtns = document.querySelectorAll( '.botActivityDecorator__button' );
-              
-              if (reactionBtns.length > 0) {
-                for (let i = 0; i <= reactionBtns.length - 1; i++) {
+
+      // const activityMiddleware = () => next => ( ...setupArgs ) => ( ...renderArgs ) => {
+      //   const render = next( ...setupArgs );
+      //   if ( render ) {
+      //     const { activity, activity: { id, from: { role }, name, type, value } } = setupArgs[0];
+      //     console.log('EVENT', activity.type === 'event')
+      //     if ( activity ) {
+      //       // const { activity, activity: { id, from: { role }, name, type, value } } = render( ...renderArgs ).props;
+      //       const main = document.querySelector( '#webchat' );
+      //       const form = main.querySelector( 'form' );
+      //       let newForm = document.createElement( 'form' );
+      //       console.log(activity.type, activity.name)
+      //       if ( type === 'event' && name.toLowerCase() === 'password_input' ) {
+      //         newForm.innerHTML = () => { return <PasswordInputActivity activity={activity} nextVisibleActivity={nextVisibleActivity} /> };
+      //         main.removeChild( form );
+      //         return main.appendChild( newForm );
+      //         // return () => <PasswordInputActivity activity={activity} nextVisibleActivity={nextVisibleActivity} />;
+      //       }
+      //       return render && (
+      //         <div>
+      //           <div key={() => id} className={role === 'user' ? HIGHLIGHT_FROM_USER_CSS : HIGHLIGHT_FROM_BOT_CSS}>
+      //             {next( ...setupArgs )( ...renderArgs )}
+      //           </div>
+      //         </div> )
+      //     }
+      //   }
+      //   return next( ...setupArgs )
+      // }
+
+      const BotActivityDecorator = ( { previousActivity, children } ) => {
+        const postActivity = usePostActivity();
+
+        const handleDownvoteButton = useCallback( () => {
+          postActivity( {
+            type: 'messageReaction',
+            reactionsAdded: [ { helpful: -1, previousActivity: previousActivity } ],
+          } );
+        }, [ previousActivity, postActivity, styleOptions ] );
+
+        const handleUpvoteButton = useCallback( () => {
+          postActivity( {
+            type: 'messageReaction',
+            reactionsAdded: [ { helpful: 1, previousActivity: previousActivity } ],
+
+          } );
+        }, [ previousActivity, postActivity ] );
+
+        return (
+          <div className="botActivityDecorator">
+            <ul className="botActivityDecorator__buttonBar">
+              <li>
+                <button id="thumbsUp" className="botActivityDecorator__button" onClick={ handleUpvoteButton }>
+                  👍
+                </button>
+                <button id="thumbsDown" className="botActivityDecorator__button" onClick={ handleDownvoteButton }>
+                  👎
+                </button>
+              </li>
+            </ul>
+            <div className="botActivityDecorator__content">{ children }</div>
+          </div>
+        );
+      };
+
+      const activityStatusMiddleware = () => next => args => {
+        const { activity, activity: { from: { role }, value }, sendState, sameTimestampGroup } = args;
+        if ( activity && activity.id ) {
+          const index = activity.id.indexOf( '|' );
+          const activityId = activity.id.substr( index + 1 );
+          if ( sendState === 'send failed' ) {
+            return getStoreMiddleware.disconnectMsg( WebChatConnectedStatus.DISCONNECT );
+          }
+
+          if ( role === 'bot' ) {
+            const reactionBtns = document.getElementsByClassName( 'botActivityDecorator__button' );
+
+            if ( reactionBtns.length > 0 ) {
+              setTimeout( () => {
+
+                for ( let i = 0; i <= reactionBtns.length - 1; i++ ) {
                   reactionBtns[ i ].onclick = () => {
-                    if (reactionBtns[ i ].classList.contains( 'reaction_positive' ) && reactionBtns[ i ].innerText === '👍') {
+                    if ( reactionBtns[ i ].classList.contains( 'reaction_positive' ) && reactionBtns[ i ].innerText === '👍' ) {
                       reactionBtns[ i ].classList.remove( 'reaction_positive' );
-                    } else if (!reactionBtns[ i ].classList.contains( 'reaction_positive' ) && reactionBtns[ i ].innerText === '👍') {
+                    } else if ( !reactionBtns[ i ].classList.contains( 'reaction_positive' ) && reactionBtns[ i ].innerText === '👍' ) {
                       reactionBtns[ i ].classList.add( 'reaction_positive' );
                       reactionBtns[ i + 1 ].classList.remove( 'reaction_negative' );
                     }
-                    
-                    if (reactionBtns[ i ].classList.contains( 'reaction_negative' ) && reactionBtns[ i ].innerText === '👎') {
+
+                    if ( reactionBtns[ i ].classList.contains( 'reaction_negative' ) && reactionBtns[ i ].innerText === '👎' ) {
                       reactionBtns[ i ].classList.remove( 'reaction_negative' );
-                    } else if (!reactionBtns[ i ].classList.contains( 'reaction_negative' ) && reactionBtns[ i ].innerText === '👎') {
+                    } else if ( !reactionBtns[ i ].classList.contains( 'reaction_negative' ) && reactionBtns[ i ].innerText === '👎' ) {
                       reactionBtns[ i ].classList.add( 'reaction_negative' );
                       reactionBtns[ i - 1 ].classList.remove( 'reaction_positive' );
                     }
-                  }
+                  };
                 }
-              }
-    
-              if ( sendState === 'sending' && value === 'isLoggedOff' || sendState === 'send failed' && value === 'isLoggedOff' ) {
-                return (
-                  <div className="activityStatus__outer__wrapper">
-                    <div className="activityStatus__wrapper">
-                      <span className="activityStatus">Sent</span>
-                    </div>
-                    <div className="activityStatus__activityId">(Message #{activityId})</div>
-                  </div>
-                );
-              } else if ( sendState === 'sending') {
-                return (
-                  <div className="activityStatus__outer__wrapper">
-                    <div className="activityStatus__wrapper">
-                      <span className="activityStatus activityStatus__sendStatus">Sending&hellip;</span>
-                    </div>
-                    <div className="activityStatus__activityId">(Message #{activityId})</div>
-                  </div>
-                );
-              } else if ( sendState === 'send failed' ) {
-                // Custom retry logic can be added when rendering the "Send failed." status.
-                return (
-                  <div className="activityStatus__outer__wrapper">
-                    <div className="activityStatus__wrapper">
-                      <span className="activityStatus">Send failed</span>
-                    </div>
-                    <div className="activityStatus__activityId">(Message #{activityId})</div>
-                  </div>
-                );
-              } else if ( !sameTimestampGroup ) {
-                return (
-                  <div className="activityStatus__outer__wrapper">
-                    <BotActivityDecorator key={args.activity.id} activityID={args.activity.id}></BotActivityDecorator>
-                    <div className="activityStatus__wrapper">
-                      <div className="activityStatus__timestamp__wrapper">
-                        <span className="activityStatus activityStatus__timestamp">
-                          <span className="activityStatus__timestampPretext">{role === 'user' ? 'User sent: ' : 'Bot sent: '}</span>
-                          <span className="activityStatus__timestampContent">{next( args )}</span>
-                        </span>
-                      </div>
-                      <div className="activityStatus__activityId">(Message #{activityId})</div>
-                    </div>
-                  </div>
-                );
-              }
+              }, 200 );
             }
-  
-            if (role === 'user') {
-              if ( sendState === 'sending' && value === 'isLoggedOff' ) {
-                return (
-                  <div>
-                    <div className="activityStatus__wrapper">
-                      <span className="activityStatus">Sent</span>
-                    </div>
-                    <div className="activityStatus__activityId">(Message #{activityId})</div>
+
+            if ( sendState === 'sending' && value === 'isLoggedOff' || sendState === 'send failed' && value === 'isLoggedOff' ) {
+              return (
+                <div className="activityStatus__outer__wrapper">
+                  <div className="activityStatus__wrapper">
+                    <span className="activityStatus">Sent</span>
                   </div>
-                );
-              } else if ( sendState === 'sending') {
-                return (
-                  <div>
-                    <div className="activityStatus__wrapper">
-                      <span className="activityStatus activityStatus__sendStatus">Sending&hellip;</span>
-                    </div>
-                    <div className="activityStatus__activityId">(Message #{activityId})</div>
+                  <div className="activityStatus__activityId">(Message #{ activityId })</div>
+                </div>
+              );
+            } else if ( sendState === 'sending' ) {
+              return (
+                <div className="activityStatus__outer__wrapper">
+                  <div className="activityStatus__wrapper">
+                    <span className="activityStatus activityStatus__sendStatus">Sending&hellip;</span>
                   </div>
-                );
-              } else if ( sendState === 'send failed' ) {
-                // Custom retry logic can be added when rendering the "Send failed." status.
-                return (
-                  <div>
-                    <div className="activityStatus__wrapper">
-                      <span className="activityStatus">Send failed</span>
-                    </div>
-                    <div className="activityStatus__activityId">(Message #{activityId})</div>
+                  <div className="activityStatus__activityId">(Message #{ activityId })</div>
+                </div>
+              );
+            } else if ( sendState === 'send failed' ) {
+              // Custom retry logic can be added when rendering the "Send failed." status.
+              return (
+                <div className="activityStatus__outer__wrapper">
+                  <div className="activityStatus__wrapper">
+                    <span className="activityStatus">Send failed</span>
                   </div>
-                );
-              } else if ( !sameTimestampGroup ) {
-                return (
-                  <div>
-                    <div className="activityStatus__wrapper">
+                  <div className="activityStatus__activityId">(Message #{ activityId })</div>
+                </div>
+              );
+            } else if ( !sameTimestampGroup ) {
+              const list = store.getState();
+              const len = list.activities.length;
+              const previousActivity = list.activities[ len - 1 ];
+              return (
+                <div className="activityStatus__outer__wrapper">
+                  <BotActivityDecorator key={ args.activity.id } previousActivity={ previousActivity }></BotActivityDecorator>
+                  <div className="activityStatus__wrapper">
+                    <div className="activityStatus__timestamp__wrapper">
                       <span className="activityStatus activityStatus__timestamp">
-                        <span className="activityStatus__timestampPretext">{role === 'user' ? 'User sent: ' : 'Bot sent: '}</span>
-                        <span className="activityStatus__timestampContent">{next( args )}</span>
+                        <span className="activityStatus__timestampPretext">{ role === 'user' ? 'User sent: ' : 'Bot sent: ' }</span>
+                        <span className="activityStatus__timestampContent">{ next( args ) }</span>
                       </span>
                     </div>
-                    <div className="activityStatus__activityId">(Message #{activityId})</div>
+                    <div className="activityStatus__activityId">(Message #{ activityId })</div>
                   </div>
-                );
-              }
+                </div>
+              );
             }
-  
-            return next( args );
-
-          }
-        };
-
-        // We are adding a new middleware to handle card action
-        const cardActionMiddleware = () => next => async ( { cardAction } ) => {
-          const { type, value } = cardAction;
-
-          switch ( type ) {
-            case 'signin':
-              // For OAuth or sign-in popups, we will open the auth dialog directly.
-              const popup = window.open();
-              const url = "https://token.botframework.com/api/oauth/signin?signin=09ac09a60b844324b454f024ce4e5cd2"
-
-              popup.location.href = url;
-              break;
-
-            case 'openUrl':
-              if ( confirm( `Do you want to open this URL?\n\n${ value }` ) ) {
-                window.open( value, '_blank' );
-              }
-              break;
-
-            default:
-              return next( { cardAction } );
+          } else if ( role === 'user' ) {
+            if ( sendState === 'sending' && value === 'isLoggedOff' ) {
+              return (
+                <div>
+                  <div className="activityStatus__wrapper">
+                    <span className="activityStatus">Sent</span>
+                  </div>
+                  <div className="activityStatus__activityId">(Message #{ activityId })</div>
+                </div>
+              );
+            } else if ( sendState === 'sending' ) {
+              return (
+                <div>
+                  <div className="activityStatus__wrapper">
+                    <span className="activityStatus activityStatus__sendStatus">Sending&hellip;</span>
+                  </div>
+                  <div className="activityStatus__activityId">(Message #{ activityId })</div>
+                </div>
+              );
+            } else if ( sendState === 'send failed' ) {
+              // Custom retry logic can be added when rendering the "Send failed." status.
+              return (
+                <div>
+                  <div className="activityStatus__wrapper">
+                    <span className="activityStatus">Send failed</span>
+                  </div>
+                  <div className="activityStatus__activityId">(Message #{ activityId })</div>
+                </div>
+              );
+            } else if ( !sameTimestampGroup ) {
+              return (
+                <div>
+                  <div className="activityStatus__wrapper">
+                    <span className="activityStatus activityStatus__timestamp">
+                      <span className="activityStatus__timestampPretext">{ role === 'user' ? 'User sent: ' : 'Bot sent: ' }</span>
+                      <span className="activityStatus__timestampContent">{ next( args ) }</span>
+                    </span>
+                  </div>
+                  <div className="activityStatus__activityId">(Message #{ activityId })</div>
+                </div>
+              );
+            }
           }
         }
+        return next( args );
+      };
 
-        const webSpeechPonyfillFactory = await window.WebChat.createCognitiveServicesSpeechServicesPonyfillFactory( {
-          credentials: await APIService.callService( 'speech' )
-        } );
+      const attachmentMiddleware = () => next => ( ...args ) => {
+        const { activity, attachment } = args[ 0 ];
+        const { activities } = store.getState();
+        const messageActivities = activities.filter( activity => activity.type === 'message' );
+        const recentBotMessage = messageActivities.pop() === activity;
 
-        const startWebChat = async () => {
-          if (!userName) {
-            userName = await helpers.generateUserName();
-          }
-          if ( directLine ) {
-            directLine = await startDirectLine(directLine, 'reconnect');
-          } else {
-            directLine = await startDirectLine();
-          }
-          render(
-            <ReactWebChat
-              directLine={directLine}
-              username={userName}
-              store={store}
-              styleOptions={await styleOptions()}
-              activityMiddleware={activityMiddleware}
-              activityStatusMiddleware={activityStatusMiddleware}
-              toastMiddleware={toastMiddleware}
-              selectVoice={( voices, activity ) =>
-                activity.locale === 'en-US' ?
-                  voices.find( ( { name } ) => /KatjaNeural/iu.test( name ) )
-                  :
-                  voices.find( ( { name } ) => /KatjaNeural/iu.test( name ) )
-                  || voices.find( ( { name } ) => /Apollo/iu.test( name ) )}
-              webSpeechPonyfillFactory={webSpeechPonyfillFactory}
-            />,
-            document.getElementById( 'webchat' )
+        if ( attachment && attachment.contentType.startsWith('application/vnd.microsoft.card')) {
+          const contentType = attachment.contentType;
+          const cardType = contentType.substring( contentType.indexOf( 'card' ) + 5 );
+          console.log( cardType.toUpperCase() + ' CARD ATTACHMENT', attachment);
+        }
+        switch ( attachment.contentType ) {
+          case 'application/iframedPage':
+            const reportUrl = attachment.content[ 0 ];
+            console.log( 'REPORTURL ', reportUrl );
+            // store.dispatch({
+            //   type: 'WEB_CHAT/SEND_MESSAGE_',
+            //   payload:
+            // })
+            return ( <div id='cardPowerBI'><iframe src={ reportUrl } frameBorder="0" allowFullScreen={ true }></iframe></div> );
+          case 'application/vnd.microsoft.card.adaptive':
+            return (
+              <AdaptiveCardContent
+                actionPerformedClassName="card__action--performed"
+                content={ attachment.content }
+                disabled={ !recentBotMessage }
+              />
             );
-          document.querySelector( '#webchat > *' ).focus();
+
+          case 'application/vnd.microsoft.card.animation':
+            return (
+              <AnimationCardContent
+                actionPerformedClassName="card__action--performed"
+                content={ attachment.content }
+                disabled={ !recentBotMessage }
+              />
+            );
+
+          case 'application/vnd.microsoft.card.audio':
+            return (
+              <AudioCardContent
+                actionPerformedClassName="card__action--performed"
+                content={ attachment.content }
+                disabled={ !recentBotMessage }
+              />
+            );
+
+          case 'application/vnd.microsoft.card.hero':
+            return (
+              <HeroCardContent
+                actionPerformedClassName="card__action--performed"
+                content={ attachment.content }
+                disabled={ !recentBotMessage }
+              />
+            );
+
+          case 'application/vnd.microsoft.card.oauth':
+            return (
+              <OAuthCardContent
+                actionPerformedClassName="card__action--performed"
+                content={ attachment.content }
+                disabled={ !recentBotMessage }
+              />
+            );
+
+          case 'application/vnd.microsoft.card.receipt':
+            return (
+              <ReceiptCardContent
+                actionPerformedClassName="card__action--performed"
+                content={ attachment.content }
+                disabled={ !recentBotMessage }
+              />
+            );
+
+          case 'application/vnd.microsoft.card.signin':
+            return (
+              <SignInCardContent
+                actionPerformedClassName="card__action--performed"
+                content={ attachment.content }
+                disabled={ !recentBotMessage }
+              />
+            );
+
+          case 'application/vnd.microsoft.card.thumbnail':
+            return (
+              <ThumbnailCardContent
+                actionPerformedClassName="card__action--performed"
+                content={ attachment.content }
+                disabled={ !recentBotMessage }
+              />
+            );
+
+          case 'application/vnd.microsoft.card.video':
+            return (
+              <VideoCardContent
+                actionPerformedClassName="card__action--performed"
+                content={ attachment.content }
+                disabled={ !recentBotMessage }
+              />
+            );
+          default:
+            return next( ...args );
         }
+      };
 
+      // We are adding a new middleware to handle card action
+      const cardActionMiddleware = () => next => async ( { cardAction } ) => {
+        const { type, value } = cardAction;
+        switch ( type ) {
+          case 'signin':
+            // For OAuth or sign-in popups, we will open the auth dialog directly.
+            const popup = window.open();
+            const url = "https://token.botframework.com/api/oauth/signin?signin=09ac09a60b844324b454f024ce4e5cd2";
+
+            popup.location.href = url;
+            break;
+
+          case 'openUrl':
+
+            if ( confirm( `Do you want to open this URL?\n\n${ value }` ) ) {
+              window.open( value, '_blank' );
+            }
+            break;
+
+          default:
+            return next( { cardAction } );
+        }
+      };
+      const webSpeechPonyfillFactory = await window.WebChat.createCognitiveServicesSpeechServicesPonyfillFactory( {
+        credentials: await APIService.callService( 'speech' )
+      } );
+
+      /* PRESENTLY BREAKS ON A PAGE REFRESH */
+      // const webSpeechPonyfillFactory = await startServices(null, 'speech')
+
+      const startWebChat = async () => {
+        if ( !userName ) {
+          userName = await helpers.generateUserName();
+        }
+        if ( directLine ) {
+          try {
+            directLine = await startServices( directLine, 'reconnect', getToken );
+          } catch ( error ) {
+            'start directLine had a boo boo';
+          }
+        } else {
+          try {
+            directLine = await startServices(null, null, getToken, userName );
+          } catch ( error ) {
+            'start directLine had another boo boo';
+          }
+        }
+        await render(
+          <ReactWebChat
+            directLine={ directLine }
+            // username={ userName }
+            store={ store }
+            /* styleOptions is passed in to styleSet in order to maintain defined options */
+            styleSet={ await styleSet( createStyleSet, styleOptions ) }
+            styleOptions={ await styleOptions }
+            // customMiddleware={buttonActivityMiddleware}
+            activityMiddleware={ activityMiddleware }
+            activityStatusMiddleware={ activityStatusMiddleware }
+            adaptiveCardsHostConfig={ await adaptiveCardsHostConfig() }
+            attachmentMiddleware={ attachmentMiddleware }
+            toastMiddleware={ toastMiddleware }
+            // Sets language used in Web Chat component
+            locale={ language ? language : window.navigator.language }
+            // locale='es-ES'
+            selectVoice={ ( voices, activity ) =>
+              activity.locale === 'en-US' ?
+                voices.find( ( { name } ) => /KatjaNeural/iu.test( name ) )
+                :
+                voices.find( ( { name } ) => /KatjaNeural/iu.test( name ) )
+                || voices.find( ( { name } ) => /Apollo/iu.test( name ) ) }
+            webSpeechPonyfillFactory={ webSpeechPonyfillFactory }
+          // sendTypingIndicator={true}
+          />,
+          document.getElementById( 'webchat' )
+        );
+        document.querySelector( '#webchat > *' ).focus();
+      };
+
+      await startWebChat();
+
+      await actionButtons( startWebChat, store, userName, getStoreMiddleware, directLine );
+
+      window.addEventListener( 'online', async ( e ) => {
+        console.log( 'EVENT_LISTENER_ONLINE' );
         await startWebChat();
+        store.dispatch( {
+          type: 'DIRECT_LINE/RECONNECT'
+        } );
+      } );
 
-        await actionButtons(startWebChat, store, userName, getMiddleware);
-        
-        window.getToken = await APIService.callService( 'token' );
-      } )().catch(err => console.error(err));
-    </script>
-  </body>
+      window.addEventListener( 'offline', (e) => {
+        console.log( 'EVENT_LISTENER_OFFLINE' );
+        store.dispatch( {
+          type: 'DIRECT_LINE/DISCONNECT'
+        } );
+      } );
+
+      // window.addEventListener( 'messageReactionReceived', (e) => {
+      //   e.preventDefault();
+      //   console.log('CUSTOM EVENT RECEIVED ', e);
+      //   store.dispatch( {
+      //     type: 'WEB_CHAT/SEND_EVENT',
+      //     payload: {
+      //       name: `${ e.target.name }`,
+      //       value: `${e.target.value}`
+      //     }
+      //   })
+      // })
+
+      // window.addEventListener( 'beforeunload', sendEvent1 );
+
+      // async function sendEvent1() {
+      //   window.alert('hi')
+
+      //   store.dispatch( {
+      //     type: 'WEB_CHAT/SEND_MESSAGE',
+      //     payload: {
+      //       text: 'User left conversation 1'
+      //     }
+      //   } )
+      //   setTimeout( () => {
+      //     if ( window.alert ) true;
+      //   }, 1000 );
+      //   // return;
+      // }
+
+      // window.addEventListener( 'sendEventActivity2', ( { data } ) => {
+      //   return "Are you sure to leave this page?";
+      //   store.dispatch( {
+      //     type: 'WEB_CHAT/SEND_MESSAGE',
+      //     payload: {
+      //       text: 'User left conversation 1'
+      //     }
+      //   } )
+      //   setTimeout( function () {
+      //     if ( window.alert ) true;
+      //   }, 1000 );
+      //   return;
+      // } );
+
+      // window.onbeforeunload = function() {
+      //   const eventSendActivity2 = new Event( 'sendEventActivity2' );
+      //   eventSendActivity2.data = 'User left conversation 2';
+      //   window.dispatchEvent( eventSendActivity2 );
+      // }
+
+      window.onbeforeunload = function () {
+        var body = { user: { userName: userName, userId: 'abc123' } };
+        let headers = { type: 'application/json' };
+        let blob = new Blob( [ JSON.stringify( body ) ], headers );
+        navigator.sendBeacon( 'http://localhost:3978/api/notify', blob );
+      };
+
+
+      // window.getToken = await APIService.getToken;
+    } )().catch( err => console.error( 'ERRRORRR ', err ) );
+
+    function encrypt( value ) {
+      var hash = CryptoJS.SHA256( value ).toString();
+      console.log( hash );
+      return hash;
+    }
+  </script>
+</body>
+
 </html>

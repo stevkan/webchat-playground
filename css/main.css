@@ -4,6 +4,7 @@ body {
   width: 100%;
   margin: 0;
   background-color: #343A40;
+  overflow: auto;
 }
 
 h2 {
@@ -19,10 +20,12 @@ h2 {
 
 #subHeader {
   display: flex;
-  justify-content: center;
+  justify-self: flex-end;
+  flex-direction: row;
   align-items: center;
   height: 2rem;
   margin-bottom: 5px;
+  order: 1;
 }
 
 #container {
@@ -47,6 +50,27 @@ h2 {
   width: 100%;
 }
 
+#webchat :focus {
+  outline-color: rgba(0, 0, 0, 0.4);
+  outline-offset: -4px;
+  /* outline-style: dotted; */
+  outline-width: 2px;
+}
+
+#webchat input[type='text']:focus {
+  outline-offset: 2px;
+}
+
+#webchat .card__action--performed {
+  background-color: #0063b1 !important;
+  border-color: #0063b1 !important;
+  color: White !important;
+}
+
+#webchat .card__action--performed:focus {
+  outline-color: rgba(255, 255, 255, 0.6);
+}
+
 #noWebchat {
   display: none;
   justify-content: center;
@@ -64,7 +88,25 @@ h2 {
 div[role=complementary] {
   border-radius: 18px;
   display: flex;
-  /* overflow: hidden !important; */
+  overflow: hidden !important;
+  background-image: url('https://botberg81bd.blob.core.windows.net/images/image_192.png?sv=2020-04-08&st=2021-11-18T19%3A09%3A40Z&se=2031-11-19T19%3A09%3A00Z&sr=b&sp=r&sig=ijkAIzdmz3zNY5RsyKAr4o%2B%2FAOVja%2BoW4oqCJj99aww%3D');
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat
+}
+
+.highlightedActivity--bot {
+  border-left-color: Red;
+  border-left-style: solid;
+  border-left-width: 5px;
+  margin-left: 8px;
+}
+
+.highlightedActivity--user {
+  border-right-color: Green;
+  border-right-style: solid;
+  border-right-width: 5px;
+  margin-right: 8px;
 }
 
 .card-Adaptive {
@@ -115,6 +157,7 @@ div[role=complementary] {
 
 .ac-pushButton {
   border-radius: 20px;
+  background-color: #f9b700;
 }
 
 .ac-pushButton:hover {
@@ -128,14 +171,16 @@ div[role=complementary] {
   color: #ffffff !important;
 }
 
-#cardPowerBI .ac-actionSet {
-  padding-bottom: 5px
+#cardPowerBI {
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-iframe {
+#cardPowerBI iframe {
   border: transparent;
-  border-radius: 18px;
-  width: 615px;
+  border-radius: 9px;
+  width: -webkit-fill-available;
   height: 730px;
 }
 
@@ -175,7 +220,11 @@ div[role=log] {
 }
 
 div[role=log]>*:not(button) {
-  width: 101.1%;
+  overflow-y: scroll;
+}
+
+div[role=log]>*:not(button)::-webkit-scrollbar {
+  display: none;
 }
 
 div[role=log]:not(button.webchat__scrollToEndButton)>* {
@@ -347,6 +396,26 @@ div[role=log] button.webchat__scrollToEndButton {
   background-color: red !important;
 }
 
+#chatHeader {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+
+.chatReceived {
+  display: flex;
+  justify-self: flex-start;
+  flex-direction: row;
+  align-items: center;
+  height: 21px;
+  width: auto;
+  min-width: 10rem;
+  margin-bottom: 5px;
+  order: 0;
+  background-color: white;
+}
+
 #reloadCssBtn {
   color: white;
   background-color: plum;
@@ -436,4 +505,110 @@ div[role=log] button.webchat__scrollToEndButton {
   border-radius: 12px;
   border-width: 2px;
   padding: 5px;
+}
+
+.main {
+  height: 40px;
+}
+
+#menuButtonContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: white;
+  opacity: 60%;
+}
+
+#menuContainer {
+  width: 250px;
+  height: fit-content;
+  position: absolute;
+  overflow: hidden;
+  display: 0;
+  flex-direction: column;
+  background-color: rgb(45, 56, 62);
+  bottom: 0;
+  justify-content: space-around;
+  padding-top: 15px;
+  border: inset;
+  border-radius: 15px;
+  border-color: rgb(211, 211, 211);
+  color: white;
+}
+
+#firstRow,
+#secondRow {
+  display: flex;
+  justify-content: space-evenly;
+}
+
+.menuItemSize,
+.menuItemSize img {
+  height: 28px;
+  width: 28px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.menuItemWrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 60px;
+}
+
+.menuItemWrapper p {
+  margin-top: 5px;
+}
+
+#menuButton,
+#menuButton:focus {
+  display: flex;
+  justify-content: center;
+  margin-top: .20rem;
+  border: none;
+  outline: none;
+}
+
+.mainBtnImage {
+  height: 32px;
+  width: 32px;
+}
+
+.passwordInput {
+  margin: 10px;
+}
+
+.passwordInput .passwordInput__form {
+  background-color: Red;
+  border-radius: 3px;
+  color: White;
+  display: flex;
+  font-family: Calibri, 'Helvetica Neue', Arial, sans-serif;
+  padding: 5px;
+}
+
+.passwordInput .passwordInput__box {
+  display: flex;
+  flex: 1;
+}
+
+.passwordInput .passwordInput__label {
+  padding: 10px;
+}
+
+.passwordInput .passwordInput__input {
+  border: 0px;
+  border-radius: 3px;
+  flex: 1;
+  letter-spacing: 0.5em;
+  outline: 0;
+  padding: 0 10px;
+  width: 100%;
+}
+
+.passwordInput .passwordInput__input:disabled {
+  background-color: rgba(255, 255, 255, 0.5);
+  color: White;
 }

@@ -1,8 +1,14 @@
-const getMiddleware = ( function () {
+let timers = [];
+let userKeyInput = '';
+let streamUrl;
+let ws;
+let restartConversation = false;
+let connectionType;
+
+const getStoreMiddleware = (function () {
   'use strict';
 
   let publicAPIs = {};
-  let timers = [];
 
   publicAPIs.storeMiddleware = async function (
     store,
@@ -11,429 +17,356 @@ const getMiddleware = ( function () {
     userName,
     mapMaker,
     helpers,
-    window
-    ) {
-      publicAPIs.store = store;
-      publicAPIs.helpers = helpers;
-      const document = window.document;
-      let location;
+    window,
+    startWebChat,
+    directLine,
+  ) {
+    publicAPIs.store = store;
+    publicAPIs.helpers = helpers;
+    const document = window.document;
+    const i18next = window.i18next;
 
-    if (action.type === 'DIRECT_LINE/UPDATE_CONNECTION_STATUS') {
-      if (action.payload) {
-        let connectionType;
-        switch (action.payload.connectionStatus) {
-          case 0:
-            connectionType = 'UNINITIATED';
+    publicAPIs.clearTimers = () => {
+      for (let t of timers) {
+        clearInterval(t);
+        timers.pop(t);
+      }
+    };
+
+    let location;
+
+    // getButtons()
+    // function getButtons() {
+    //   setTimeout(() => {
+    // let pushButtons = [];
+    // document.querySelectorAll('.ac-pushButton').forEach(button => {
+    //   pushButtons.push(button);
+    // })
+
+    //     for (let button of pushButtons) {
+    //       button.addEventListener('click', (event) => {
+    //         console.log(event)
+    //         if (button.children[0].id === 'buttonOuterDiv'){
+    //           button.classList.add( 'buttonClicked' );
+    //           button.children[0].classList.add( 'buttonClickedDiv' );
+    //           button.children[0].children[0].classList.add( 'buttonClickedText' );
+    //           getButtons();
+    //         }
+    //         if (button.children[0].classList.contains('buttonClicked')){
+    //           button.classList.remove( 'buttonClicked' );
+    //           button.children[0].classList.remove( 'buttonClickedDiv' );
+    //           button.children[0].children[0].classList.remove( 'buttonClickedText' );
+    //         }
+    //       })
+    //       return;
+    //     }
+    //   }, 300);
+    // }
+    // for (let button of pushButtons) {
+    //       document.addEventListener('mouseup', (event) => {
+    //         console.log(event.target)
+    //         if (event.target) {
+    //           if (event.target.classList.contains('buttonClicked')){
+    //             // console.log('BUTTON 1 ', button)
+    //             event.target.classList.remove( 'buttonClicked' );
+    //             event.target.children[0].classList.remove('buttonClickedDiv');
+    //             event.target.children[0].children[0].classList.remove('buttonClickedText');
+    //             return
+    //           }
+    //           if (!event.target.classList.contains('buttonClicked')) {
+    //             // console.log('BUTTON 2 ', button)
+    //             event.target.classList.add( 'buttonClicked' );
+    //             event.target.children[0].classList.add( 'buttonClickedDiv' );
+    //             event.target.children[0].children[0].classList.add( 'buttonClickedText' );
+    //             return;
+    //           }
+    //         }
+    //       })
+    //     // }
+    //     // getButtons();
+    //   }, 300);
+    // }
+
+    const resource = {
+      app: {
+        name: 'i18next',
+      },
+    };
+
+    switch (action.type) {
+      case 'DIRECT_LINE/CONNECT':
+        onConnect(store, action);
+        // streamUrl = action.payload.directLine.streamUrl;
+        if (action.payload?.directLine?.connectionStatus$) {
+          action.payload.directLine.connectionStatus$.subscribe(connectionStatus => {
+            let connectionType;
+            switch (connectionStatus) {
+              case 0:
+                connectionType = 'UNINITIATED';
+                break;
+              case 1:
+                connectionType = 'CONNECTING';
+                break;
+              case 2:
+                connectionType = 'ONLINE';
+                break;
+              case 3:
+                connectionType = 'TOKEN_EXPIRED';
+                break;
+              case 4:
+                connectionType = 'FAILED_TO_CONNECT';
+                break;
+              case 5:
+                connectionType = 'ENDED';
+                break;
+              default:
+                return console.log(
+                  `DIRECT_LINE >> UNKNOWN_CONNECTION_STATUS: ${connectionStatus} - Expected a number, received a string`,
+                );
+            }
+            console.log(`DIRECT_LINE >> CONNECTED_CONNECTION_STATUS: ${connectionType}`, action);
+          });
+        }
+        console.log(localStorage.getItem('streamUrl'));
+        ws = new WebSocket(localStorage.getItem('streamUrl'));
+        ws.onopen = e => console.log('CUSTOM WEB SOCKET >> OPEN ', e);
+        ws.onclose = e => console.log('CUSTOM WEB SOCKET >> CLOSED ', e);
+        ws.onerror = e => console.log('CUSTOM WEB SOCKET >> ERROR ', e);
+        return next(action);
+      case 'DIRECT_LINE/CONNECT_FULFILLED':
+        console.log('CONNECT_FULFILLED: ', action);
+        setTimeout(() => {
+          onConnectFulfilled(store, action);
+        }, 1000);
+        return next(action);
+      case 'DIRECT_LINE/CONNECT_FULFILLING':
+        console.log('CONNECT_FULFILLING: ', action);
+        return next(action);
+      case 'DIRECT_LINE/CONNECT_PENDING':
+        console.log('CONNECT_PENDING: ', action);
+        return next(action);
+      case 'DIRECT_LINE/CONNECTION_STATUS_UPDATE':
+        console.log('CONNECTION_STATUS_UPDATE: ', action);
+        return next(action);
+      case 'DIRECT_LINE/DISCONNECT':
+        disconnectMsg(WebChatConnectedStatus.DISCONNECT);
+        return next(action);
+      case 'DIRECT_LINE/DISCONNECT_FULFILLED':
+        onDisconnectFulfilled(store, action, restartConversation, startWebChat);
+        restartConversation = false;
+        return next(action);
+      case 'DIRECT_LINE/DISCONNECT_PENDING':
+        onDisconnectPending(store, action);
+        return next(action);
+      case 'DIRECT_LINE/INCOMING_ACTIVITY':
+        const activityType = action.payload.activity.type;
+        switch (activityType) {
+          case 'endOfConversation':
+            onEndOfConversation(store, action);
             break;
-          case 1:
-            connectionType = 'CONNECTING';
+          case 'event':
+            onIncomingEvent(store, action);
             break;
-          case 2:
-            connectionType = 'ONLINE';
+          case 'message':
+            onIncomingMessage(store, action);
             break;
-          case 3:
-            connectionType = 'TOKEN_EXPIRED';
-            break;
-          case 4:
-            connectionType = 'FAILED_TO_CONNECT';
-            break;
-          case 5:
-            connectionType = 'ENDED';
+          case 'messageReaction':
+            onIncomingMessageReaction(store, action);
             break;
           default:
-            connectionType = 'ERROR_GETTING_CONNECTION_STATUS'
-        }
-        console.log(`DIRECT_LINE >> UPDATED_CONNECTION_STATUS: ${ connectionType }`);
-      }
-    }
-    
-    if (action.type === 'DIRECT_LINE/RECONNECT') {
-      console.log('WEB_CHAT >> RECONNECTING')
-      setTimeout(() => {
-        store.dispatch( {
-          type: 'WEB_CHAT/SEND_MESSAGE_BACK',
-          payload: {
-            value: 'isLoggedOn',
-            displayText: `${userName} rejoined the conversation`,
-            text: `${userName} rejoined the conversation`
-          }
-        } );
-        window.dispatchEvent(buttonClickEvent);
-      }, 1000);
-
-      // await startWebChat();
-      // setTimeout(() => {
-      //   store.dispatch( {
-      //     type: 'DIRECT_LINE/UPDATE_CONNECTION_STATUS',
-      //     payload: 'ONLINE'
-      // }, 1000);
-    }
-
-    publicAPIs.disconnectMsg = (type) => {
-      let webchat = document.getElementById('webchat');
-      let noWebchat = document.getElementById('noWebchat');
-      if (type === 'DIRECT_LINE/CONNECT') {
-        webchat.style.display = 'flex';
-        noWebchat.style.display = 'none';
-      }
-      if (type === 'DIRECT_LINE/DISCONNECT') {
-        noWebchat.style = webchat.style;
-        noWebchat.innerHTML = webchat.innerHTML;
-        const logs = noWebchat.querySelectorAll('[role="log"]');
-        logs[1].innerHTML = '<div class="divDisconnected"><div class="disconnected">Web Chat Disconnected</div></div>';
-        webchat.style.display = 'none';
-        noWebchat.style.display = 'flex';
-      }
-    }
-    
-    if (action.type === 'DIRECT_LINE/CONNECT') {
-      console.log('WEB_CHAT >> CONNECTED')
-      publicAPIs.disconnectMsg(action.type);
-  
-      //   } )
-      // store.dispatch({
-        //   type: 'DIRECT_LINE/UPDATE_CONNECTION_STATUS',
-      //   payload: {
-      //     connectionStatus: 'ONLINE'
-      //   }
-      // })
-      // setTimeout( () => {
-      //   console.log( 'timer set' )
-      //   store.dispatch( {
-      //     type: 'WEB_CHAT/SET_NOTIFICATION',
-      //     payload: {
-      //       data: { accepted: false },
-      //       id: 'isLoggedOn',
-      //       level: 'info'
-      //     }
-      //   } );
-      // }, activeCountdown );
-    }
-
-    if (action.type === 'DIRECT_LINE/DISCONNECT') {
-      publicAPIs.disconnectMsg(action.type)
-      // store.dispatch({
-      //   type: 'WEB_CHAT/'
-      // })
-    }
-
-    if (action.type === 'DIRECT_LINE/DISCONNECT_FULFILLED') {
-      console.log('WEB_CHAT >> DISCONNECTED')
-      if ( action.payload && action.payload.activity && action.payload.activity.channelData ) {
-        const { channelData } = action.payload.activity;
-        if ( channelData.action === 'logoff_received' ) {
-          // store.dispatch( {
-          //   type: 'DIRECT_LINE/DISCONNECT'
-          // } )
-          // return next(action);
-        }
-      }
-        // store.dispatch({
-        //   type: 'DIRECT_LINE/UPDATE_CONNECTION_STATUS',
-        //   payload: {
-        //     connectionStatus: 5
-        //   }
-        // })
-    }
-
-    if (action.type === 'DIRECT_LINE/INCOMING_ACTIVITY') {
-      document.querySelector( 'ul[role="list"]' ).scrollIntoView( { behavior: 'smooth', block: 'end' } );
-      if (action.payload && action.payload.activity) {
-        const { activity, activity: { attachments, channelData, from: { role }, name } } = action.payload;
-        switch (role) {
-          case "bot":
-            console.log('INCOMING_ACTIVITY ', activity);
-            break;
-          case "user":
-            console.log('OUTGOING_ACTIVITY ', activity);
             break;
         }
-
-        caches.open('web-chat')
-          .then(function(cache) {
-            return cache.add('./playground-wc.html');
-          })
-        
-        if (channelData && channelData.action) {
-          if(channelData.action === 'dialog_reset') {
-            store.dispatch( {
-              type: 'WEB_CHAT/SEND_MESSAGE',
-              payload: {
-                text: 'Diaalloggg...START!'
-              }
-            } )
-          }
+        return next(action);
+      case 'DIRECT_LINE/POST_ACTIVITY':
+        try {
+          onPostActivity(store, action);
+        } catch (error) {
+          console.log('ERROR POSTING ACTIVITY => ', error);
+          break;
         }
+        return next(action);
+      case 'DIRECT_LINE/POST_ACTIVITY_FULFILLED':
+        console.log('POST_ACTIVITY_FULFILLED ', action);
+        return next(action);
+      case 'DIRECT_LINE/POST_ACTIVITY_PENDING':
+        console.log('POST_ACTIVITY_PENDING ', action);
+        return next(action);
+      case 'DIRECT_LINE/QUEUE_INCOMING_ACTIVITY':
+        console.log('QUEUE_INCOMING_ACTIVITY: ', action);
+        return next(action);
+      case 'DIRECT_LINE/RECONNECT':
+        onReconnect(store, action, userName);
+        // ws = new WebSocket(localStorage.getItem('streamUrl'));
+        // ws.onopen = (e) => console.log('socket open ', e)
+        // ws.onclose = (e) => {
+        //   console.log('socket closed ', e)
+        //   store.dispatch({
+        //     type: 'DIRECT_LINE/DISCONNECT'
+        //   })
+        // }
+        // ws.onerror = (e) => console.log('socket error ', e)
+        return next(action);
+      case 'DIRECT_LINE/UPDATE_CONNECTION_STATUS':
+        if (action?.payload?.connectionStatus) {
+          let connectionStatus = action.payload.connectionStatus;
+          let restartConversation;
 
-        publicAPIs.clearTimers = () => {
-          for (let t of timers) {
-            clearInterval(t);
-            timers.pop(t);
-          }
-        }
-
-        function refreshTimer() {
-          publicAPIs.clearTimers();
-          let timer = setInterval( async () => {
-            await startDirectLine();
-          }, 1500000);
-          timers.push(timer);
-        }
-        
-        if (activity.type === 'event' || activity.type === 'message') {
-          if (activity.from.role === 'user') {
-            if (activity.name === 'webchat/join' || activity.text) {
-              try {
-                console.log('WEB_CHAT => GETTING_GEOLOCATION')
-                const name = 'get_geolocation';
-                await publicAPIs.helpers.geoLoc(name);
-              } catch(error) {
-                console.log(`WEB CHAT => GEOLOCATION LOGGING FAILED (${ error })`)
-              }
-              refreshTimer();
-            }
-          }
-        }
-
-        if (activity.type === 'postBack' && activity.channelData && activity.channelData.updateActivity) {
-          // setTimeout(() => {
-            const updateActivity = JSON.parse(activity.channelData.updateActivity);
-            const idIndex = updateActivity.id.indexOf('|');
-            const updateActivityId = updateActivity.id.substr(idIndex + 1)
-
-            document.querySelectorAll('.from-user .webchat__bubble__content').forEach(message => {
-              const elementActivityId = message.attributes.activityid.value;
-              if (elementActivityId.toString() === updateActivityId.toString()) {
-                let p = message.querySelector('p');
-                let style = p.getAttribute('style');
-                p.innerHTML = updateActivity.text;
-                p.setAttribute('style', style);
-              }
-            });
-          // }, 500);
-        }
-  
-        if (activity.type === 'message') {
-          if (activity.text || activity.attachments) {
-            const userMessages = document.querySelectorAll('.from-user .webchat__bubble__content');
-            const userMessageLength = userMessages.length;
-            if (userMessageLength > 0) {
-              const userMessage = userMessages[ userMessageLength - 1 ];
-              const idIndex = activity.id.indexOf('|');
-              const activityId = activity.id.substr(idIndex + 1)
-              userMessage.setAttribute('activityid', activityId);
-            }
-          }
-          // Get activity watermark
-          const index = activity.id.indexOf('|');
-          const watermarkString = activity.id.substr(index + 1);
-          let watermark = Number(watermarkString);
-            
-          switch (watermark > 9) {
-            case true:
-              let newWatermark = watermark - 10;
-              if (newWatermark > sessionStorage.getItem( 'watermark' )) {
-                sessionStorage.setItem( 'watermark', newWatermark );
-              }
+          switch (connectionStatus) {
+            // case 2:
+            //   store.dispatch({
+            //     type: 'DIRECT_LINE/CONNECTING',
+            //   });
+            //   break;
+            case 3: // connectionStatus === 'TOKEN_EXPIRED'
+              disconnectMsg(WebChatConnectedStatus.DISCONNECT);
+              await setTimeout(() => {
+                restartConversation = confirm(
+                  'Your session has expired. Would you like to start again?',
+                );
+                console.log('HERERERERE');
+                if (restartConversation === true) {
+                  disconnectMsg(WebChatConnectedStatus.CONNECT);
+                  setTimeout(() => {
+                    startWebChat();
+                    restartConversation = false;
+                  }, 1000);
+                }
+              }, 1000);
               break;
-            default:
-              store.dispatch({
-                type: 'WEB_CHAT/SEND_MESSAGE_BACK',
-                payload: {
-                  text: '',
-                  value: { token: sessionStorage.getItem( 'token' ) }
-                }
-              })
-              store.dispatch({
-                type: 'WEB_CHAT/SEND_EVENT',
-                payload: {
-                  name: 'webchat/join',
-                  value: { language: window.navigator.language }
-                }
-              })
-              sessionStorage.setItem( 'watermark', 0 );
-          }
-
-          // Update card button text
-          const ac_pushButtons = document.querySelectorAll( '.ac-pushButton' )
-          for ( let i = 0; i <= ac_pushButtons.length - 1; i++ ) {
-            if ( ac_pushButtons[ i ].children[ 0 ].nodeName === 'DIV' && ac_pushButtons[ i ].children[ 0 ].innerHTML === 'Placeholder Message' ) {
-              ac_pushButtons[ i ].children[ 0 ].innerHTML = '<div>Service Details</div>'
-              // ac_pushButtons[i].children[0].innerHTML = '<div><div>Service details</div><br />\"Service details for PC request\"</div> '
-              continue;
-            }
-          }
-          
-          if (attachments && attachments[ 0 ]) {
-            setTimeout(() => {
-              const ac_cards = document.querySelectorAll( '.ac-adaptiveCard' )
-              let ac_buttons = [];
-              ac_cards.forEach(card => {
-                let pushButtons = card.querySelectorAll( '.ac-pushButton' );
-                pushButtons.forEach(pushButton => {
-                  ac_buttons.push(pushButton);
-                })
-              })
-              if ( ac_cards.length > 0 ) {
-                ac_buttons.map((button) => {
-                  button.addEventListener( 'click', function(event) {
-                    if (event.target.onclick) {
-                      button.classList.add( 'buttonClicked' );
-                      const div = button.getElementsByTagName('div');
-                      div[0].classList.add( 'buttonClickedDiv' );
-                      let text = div[0] ? div[0] : div[0].children[0];
-                      let newText = [];
-                      newText.push(document.createElement('div'));
-                      newText[0].classList.add( 'buttonClickedText' );
-                      newText[0].innerText = text.innerText;
-                      div[0].innerText = '';
-                      div[0].appendChild(newText[0]);
-                    }
-                  });
-                });
-              }
-              if (ac_cards.length > 1 ) {
-                let index = ac_cards.length - 1;
-                for (let i = 0; i <= index; i++) {
-                  if (i === index) {
-                    let card = ac_cards[index - 1]
-                    console.log(card)
-                    card.querySelectorAll( 'button' ).forEach( button => {
-                      button.classList.remove( 'serviceCardHover' );
-                      button.setAttribute( 'disabled', 'disabled' )
-                    } );
-                  }
-                };
-              }
-            }, 300);
-
-            if (attachments[ 0 ].content && attachments[ 0 ].content.trigger && attachments[ 0 ].content.trigger === 'cardTrigger' ) {
-              setTimeout(() => {
-                let cards = document.querySelectorAll( '.ac-adaptiveCard' )
-                let cardLength = cards.length;
-                let card = cards[ cardLength - 1 ];
-                card.querySelectorAll( 'button' ).forEach(button => {
-                  if (button.children[0].innerText === 'Service Details') {
-                    button.classList.add('serviceCard');
-                    button.classList.add('serviceCardHover');
-                  }
-                });
-              }, 300 )
-            }
-          }
-
-          if (activity.text) {
-            if (activity.text.toLowerCase() === 'get me a map') {
-              try {
-                console.log('WEB CHAT => LOGGING_GEOLOCATION')
-                const location = new Promise((resolve, reject) => {
-                  let result = mapMaker(store)
-                  if (result) {
-                    resolve()
-                  } else {
-                    reject()
-                  }
-                });
-
-                location
-                  .then(() => {
-                    const myMap = document.getElementById('myMap');
-                    myMap.setAttribute('style', 'height: 60vh; width: 60vw;');
-                  })
-                  .catch((error) => {
-                    console.log(`WEB CHAT => GEOLOCATION_LOGGING_FAILED (${ error })`)
-                  })
-              } catch(error) {
-                console.log(`WEB_CHAT => GEOLOCATION_LOGGING_FAILED (${ error })`)
-              }
-            }
           }
         }
-      }
-    }
-
-    if (action.type === 'DIRECT_LINE/POST_ACTIVITY') {
-      if (action.payload && action.payload.activity) {
-        const { activity, activity: { from } } = action.payload;
-        let latitude;
-        let longitude;
-        if (activity.text) {
-          if (activity.text.toLowerCase() === 'send me a map') {
-            try {
-                console.log('WEB_CHAT => LOGGING_GEOLOCATION')
-                latitude = sessionStorage.getItem('latitude');
-                longitude = sessionStorage.getItem('longitude');
-                action = window.simpleUpdateIn(
-                  action,
-                  ['payload', 'activity', 'channelData', 'latitude' ],
-                  () => Number(latitude)
-                );
-                action = window.simpleUpdateIn(
-                  action,
-                  ['payload', 'activity', 'channelData', 'longitude' ],
-                  () => Number(longitude)
-                );
-            } catch(error) {
-              console.log(`WEB CHAT => GEOLOCATION LOGGING FAILED (${ error })`)
+        return next(action);
+      case 'WEB_CHAT/MARK_ACTIVITY':
+        console.log('MARK_ACTIVITY ', action);
+        return next(action);
+      case 'WEB_CHAT/SEND_EVENT':
+        console.log('SEND_EVENT ', action);
+        return next(action);
+      case 'WEB_CHAT/SEND_FILES':
+        console.log('SEND_FILES ', action);
+        return next(action);
+      case 'WEB_CHAT/SET_LANGUAGE':
+        console.log('SET_LANGUAGE ', action);
+        return next(action);
+      case 'WEB_CHAT/SET_DICTATE_INTERIMS':
+        console.log('SET_DICTATE_INTERIMS ', action);
+        if (action?.payload?.dictateInterims) {
+          i18next.t(resource.app); //(action.payload.dictateInterims[0]);
+        }
+        return next(action);
+      case 'WEB_CHAT/SET_DICTATE_STATE':
+        console.log('SET_DICTATE_STATE ', action);
+        return next(action);
+      case 'WEB_CHAT/SET_NOTIFICATION':
+        console.log('SET_NOTIFICATION ', action);
+        return next(action);
+      case 'WEB_CHAT/SET_REFERENCE_GRAMMAR_ID':
+        console.log('SET_REFERENCE_GRAMMAR_ID ', action);
+        return next(action);
+      case 'WEB_CHAT/SET_SEND_BOX':
+        console.log('SET_SEND_BOX ', action);
+        return next(action);
+      case 'WEB_CHAT/SEND_MESSAGE':
+        console.log('SEND_MESSAGE ', action);
+        return next(action);
+      case 'WEB_CHAT/SEND_MESSAGE_BACK':
+        console.log('SEND_MESSAGE_BACK ', action);
+        return next(action);
+      case 'WEB_CHAT/SEND_POST_BACK':
+        console.log('SEND_POST_BACK ', action);
+        return next(action);
+      case 'WEB_CHAT/SET_SEND_TYPING_INDICATOR':
+        console.log('SET_SEND_TYPING_INDICATOR ', action);
+        return next(action);
+      case 'WEB_CHAT/SET_SUGGESTED_ACTIONS':
+        console.log('SET_SUGGESTED_ACTIONS ', action);
+        return next(action);
+      case 'WEB_CHAT/START_DICTATE':
+        console.log('START_DICTATE ', action);
+        return next(action);
+      case 'WEB_CHAT/STOP_DICTATE':
+        document.getElementsByTagName('body')[0].onkeyup = function (e) {
+          const ev = e || event;
+          const ignoreKeys = [
+            'ArrowDown',
+            'ArrowLeft',
+            'ArrowRight',
+            'ArrowUp',
+            'Backspace',
+            'Delete',
+            'End',
+            'Enter',
+            'Home',
+            'PageDown',
+            'PageUp',
+          ];
+          if (ev.keyCode && ev.location === 0) {
+            if (!ignoreKeys.includes(ev.key)) {
+              userKeyInput = userKeyInput.concat(ev.key);
             }
           }
-          
-          if (activity.text.startsWith('update activity')) {
-            const text = activity.text;
-            let a = text.split(' ');
-            let command = a.slice(0,2).join(' ');
-            let nbrString = a.slice(2).join(' ');
-            let nbrStringArray = nbrString.split(' ');
-            let nbr = nbrStringArray[0];
-            let newText = nbrStringArray.slice(1).join(' ');
-            const activityData = { command: command, activityId: nbr, text: newText };
-            action = window.simpleUpdateIn(
-              action,
-              ['payload', 'activity', 'channelData', 'activityData' ],
-              () => activityData
-            );
-          }
-        }
-      }
-    }
+        };
 
-    return next(action);
-  }
+        if (action['@@redux-saga/SAGA_ACTION']) {
+          if (userKeyInput.length > 0) {
+            console.log('SAGA_ACTION: ', userKeyInput);
+          }
+          userKeyInput = '';
+          console.log('STOP_DICTATE ', action);
+        }
+        return next(action);
+      case 'WEB_CHAT/START_SPEAKING':
+        console.log('START_SPEAKING: ', action);
+        return next(action);
+      case 'WEB_CHAT/STOP_SPEAKING':
+        console.log('STOP_SPEAKING: ', action);
+        return next(action);
+      case 'WEB_CHAT/SUBMIT_SEND_BOX':
+        console.log('SUBMIT_SEND_BOX: ', action);
+        return next(action);
+      default:
+        console.log('UNDEFINED ACTION ', action);
+        return next(action);
+    }
+  };
 
   const sendMessageEvent = (function () {
-    window.addEventListener( 'sendMessageEvent', async (event) => {
-      let { data, data: { type, name, value } } = event;
+    window.addEventListener('sendMessageEvent', async event => {
+      let {
+        data,
+        data: { type, name, value },
+      } = event;
       if (type === 'message') {
-        await publicAPIs.store.dispatch( {
+        await publicAPIs.store.dispatch({
           type: 'WEB_CHAT/SEND_MESSAGE',
           payload: {
-            text: `${ value }`
-          }
-        } );
+            text: `${value}`,
+          },
+        });
       }
 
       if (type === 'event') {
         await publicAPIs.helpers.geoLoc(name, value, publicAPIs.store);
       }
-    } );
-  })()
+    });
+  })();
 
   // const buttonClick = (function() {
   //   setTimeout(() => {
-  //   window.addEventListener('buttonClickEvent', (e) => {
-  //     const { button } = e;
+  //     window.addEventListener('buttonClickEvent', (e) => {
+  //       const { button } = e;
   //       const card = button.closest('.ac-adaptiveCard')
-  //       button.classList.add( 'buttonClicked' );
-  //       const div = button.querySelector('div');
-  //       div.classList.add( 'buttonClickedDiv' );
-  //       let text = div.querySelector('div');
-  //       if (!text) {
-  //         text = document.createElement('div')
-  //         text.innerText = div.innerText;
-  //         div.innerText = '';
-  //         div.appendChild(text);
-  //       }
-  //       text.classList.add( 'buttonClickedText' );
+  //       // button.classList.add( 'buttonClicked' );
+  //       // const div = button.querySelector('div');
+  //       // div.classList.add( 'buttonClickedDiv' );
+  //       // let text = div.querySelector('div');
+  //       // if (!text) {
+  //       //   text = document.createElement('div')
+  //       //   text.innerText = div.innerText;
+  //       //   div.innerText = '';
+  //       //   div.appendChild(text);
+  //       // }
+  //       // text.classList.add( 'buttonClickedText' );
   //       card.querySelectorAll( 'button' ).forEach( button => {
   //         button.setAttribute( 'disabled', 'disabled' )
   //       } );
@@ -442,5 +375,22 @@ const getMiddleware = ( function () {
   // })();
 
   return publicAPIs;
-
 })();
+
+const disconnectMsg = status => {
+  let webchat = document.getElementById('webchat');
+  let noWebchat = document.getElementById('noWebchat');
+  if (status === WebChatConnectedStatus.CONNECT) {
+    webchat.style.display = 'flex';
+    noWebchat.style.display = 'none';
+  }
+  if (status === WebChatConnectedStatus.DISCONNECT) {
+    noWebchat.style = webchat.style;
+    noWebchat.innerHTML = webchat.innerHTML;
+    const transcriptWindow = noWebchat.querySelector('.webchat__basic-transcript');
+    transcriptWindow.innerHTML =
+      '<div class="divDisconnected"><div class="disconnected">Web Chat Disconnected</div></div>';
+    webchat.style.display = 'none';
+    noWebchat.style.display = 'flex';
+  }
+};

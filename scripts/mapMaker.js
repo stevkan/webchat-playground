@@ -6,31 +6,27 @@ const mapMaker = (function () {
     await navigator.geolocation.getCurrentPosition( async (position) => {
       const { latitude, longitude } = position.coords;
 
-      const map = new atlas.Map( 'myMap', {
-        center: [ longitude, latitude ],
+      const map = new atlas.Map('myMap', {
+        center: [longitude, latitude],
         zoom: 13,
         language: 'en-US',
-        style: "grayscale_dark",
+        style: 'grayscale_dark',
         renderWorldCopies: true,
         showBuildingModels: true,
         showFeedbackLink: false,
         showLogo: false,
         showTileBoundaries: false,
         light: {
-          anchor: "map",
-          color: "#FFFFFF",
+          anchor: 'map',
+          color: '#FFFFFF',
           intensity: 0.5,
-          position: [
-            1.15,
-            210,
-            30
-          ]
+          position: [1.15, 210, 30],
         },
         authOptions: {
           authType: 'subscriptionKey',
-          subscriptionKey: 'f38ds624Rp-J3J4r_kg9zO4-PV6RkkGhiEt3MgM2R9o'
-        }
-      } );
+          subscriptionKey: 'wAYnEoEVv9IUIVaqIl-8GbIpn2WPFPD4vGiYCk-pre0',
+        },
+      });
 
       map.events.add( 'ready', function () {
 
